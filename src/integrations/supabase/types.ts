@@ -270,6 +270,7 @@ export type Database = {
           full_name: string
           hired_at: string
           id: string
+          is_test_account: boolean
           job_role: Database["public"]["Enums"]["job_role"] | null
           outlet_id: string | null
         }
@@ -279,6 +280,7 @@ export type Database = {
           full_name?: string
           hired_at?: string
           id: string
+          is_test_account?: boolean
           job_role?: Database["public"]["Enums"]["job_role"] | null
           outlet_id?: string | null
         }
@@ -288,6 +290,7 @@ export type Database = {
           full_name?: string
           hired_at?: string
           id?: string
+          is_test_account?: boolean
           job_role?: Database["public"]["Enums"]["job_role"] | null
           outlet_id?: string | null
         }

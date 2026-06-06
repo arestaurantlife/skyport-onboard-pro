@@ -1,32 +1,64 @@
-## Apply SkyportHospitality.com Brand Colors and Jost + Inter Fonts
+## Plan: Per-Outlet Seeding for Test Users + Courses
 
-### Overview
-Update the entire training platform UI to use the SkyportHospitality.com brand palette and Jost + Inter typography.
+### Outlet assignments
 
-### Brand Tokens (from SkyportHospitality.com)
-- **Primary blue:** `#0966B1` → `oklch(0.55 0.12 245)`
-- **Dark navy:** `#0f3f65` → `oklch(0.35 0.08 245)`
-- **Orange/gold accent:** `#ffa400` → `oklch(0.80 0.18 80)`
-- **Typography:** Jost (headings) + Inter (body) via Google Fonts
+11 test users distributed across the 3 outlets. Each user emailed `test+<slug>@skyportco.test`, password `TestPass!2026`, flagged `is_test_account = true`.
 
-### Steps
+**Mesa Verde Cantina** (existing course)
+- `test+server` — server
+- `test+hostess` — hostess
+- `test+bartender` — bartender
+- `test+manager` — manager role (oversees Mesa Verde roster)
 
-1. **Load Google Fonts**
-   - Add Jost and Inter `<link>` tags to `src/routes/__root.tsx` `head.links`.
-   - Ensure `crossOrigin="anonymous"` on the gstatic preconnect.
+**Altitude Burger Co.**
+- `test+linecook` — line_cook
+- `test+prepcook` — prep_cook
+- `test+dishwasher` — dishwasher
+- `test+foodrunner` — food_runner
 
-2. **Update `src/styles.css` tokens**
-   - Replace `:root` and `.dark` primary colors with the SkyportHospitality blue.
-   - Set accent to the orange/gold.
-   - Update `--gradient-hero` to use the new primary + primary-glow.
-   - Register `--font-display: "Jost", sans-serif` and `--font-body: "Inter", sans-serif` in `@theme inline`.
-   - Apply font families in `@layer base` (`font-family: var(--font-body)` for body, `font-family: var(--font-display)` for headings).
+**Rocky Brew Coffee**
+- `test+supervisor` — supervisor
+- `test+newmanager` — new_manager
+- `test+admin` — admin role (cross-outlet visibility; outlet_id = Rocky Brew for profile completeness)
 
-3. **Audit and fix hardcoded colors**
-   - `src/routes/_authenticated/dashboard.tsx`: Replace the amber alert (`bg-amber-50`, `text-amber-700`, etc.) with semantic warning colors mapped to the brand palette.
-   - `src/routes/index.tsx`: Replace the inline `var(--gradient-hero)` if it needs adjustment for the new primary; otherwise leave it since it reads the token.
-   - `src/routes/_authenticated/certificate.$courseId.tsx`: Verify `border-accent/40` and `text-accent` render correctly with the new orange accent; adjust if contrast is poor.
-   - Scan remaining route/component files for any literal Tailwind color classes (e.g., `blue-600`, `slate-900`) and swap them for semantic tokens (`primary`, `foreground`, `muted-foreground`, etc.).
+### Course cloning
 
-4. **Build validation**
-   - Run the dev build and visually confirm the platform reflects the SkyportHospitality palette on key screens: landing, auth, dashboard, course player, quiz, certificate, and manager dashboard.
+Clone the existing Mesa Verde "Server Training" course (modules → chapters → quizzes → quiz_questions) into two new courses, one per outlet:
+- `Server Training — Altitude Burger Co.` (outlet_id = Altitude)
+- `Server Training — Rocky Brew Coffee` (outlet_id = Rocky Brew)
+
+Cloning preserves structure (same module/chapter/quiz/question counts and content) so course-player, quiz, and certificate pages render identically for users at any outlet. New UUIDs for every cloned row; passing-score and ordering copied verbatim.
+
+### Schema change
+
+Add `is_test_account boolean NOT NULL DEFAULT false` to `profiles` so test fixtures are identifiable and can be excluded from production manager rosters later.
+
+### Seeding script
+
+`scripts/seed-test-users.ts` (run with `bun scripts/seed-test-users.ts`):
+
+1. Reads `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` from env.
+2. **Idempotent course clone**: looks up Mesa Verde course; for each of Altitude + Rocky Brew, upserts a clone keyed by `(outlet_id, title)`. Skips if clone already exists.
+3. **Idempotent user creation**: for each of the 11 fixtures, calls `auth.admin.listUsers` → if email exists, reuses id; else `auth.admin.createUser({ email_confirm: true })`.
+4. Upserts `profiles` row with `outlet_id`, `job_role`, `full_name`, `is_test_account = true`.
+5. Upserts `user_roles` row (`employee` / `manager` / `admin` per fixture).
+6. Logs created vs reused count per user for CI visibility.
+
+Script is server-only; never imported into app code. Service role key stays in env.
+
+### Playwright fixture exposure
+
+`tests/e2e/fixtures/test-users.ts` exports the 11 fixtures (email, password, role, outlet name, expected course title) so each Playwright spec can sign in as a role and assert the correct outlet + course render.
+
+### Files
+
+- New migration: `is_test_account` column on `profiles`
+- New: `scripts/seed-test-users.ts`
+- New: `tests/e2e/fixtures/test-users.ts`
+- No app code changes
+
+### Out of scope
+
+- Production filter to hide `is_test_account` users from manager rosters (follow-up)
+- Cleanup script (manual delete via dashboard)
+- Writing the Playwright specs themselves (next step after seeding lands)
