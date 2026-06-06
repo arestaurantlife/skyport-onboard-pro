@@ -460,6 +460,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      issue_certificate_if_complete: {
+        Args: { _course_id: string }
+        Returns: {
+          already_existed: boolean
+          certificate_id: string
+          issued_at: string
+          serial: string
+        }[]
+      }
       validate_invite: {
         Args: { _code: string }
         Returns: {

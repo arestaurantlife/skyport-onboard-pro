@@ -35,10 +35,6 @@ export async function getCurrentProfile() {
   };
 }
 
-export function shortSerial() {
-  return "SKY-" + Math.random().toString(36).slice(2, 10).toUpperCase();
-}
-
 export function newInviteCode(role: JobRole) {
   const prefix = role.split("_").map((s) => s[0]).join("").toUpperCase();
   const rand = Math.random().toString(36).slice(2, 8).toUpperCase();

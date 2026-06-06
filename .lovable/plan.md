@@ -1,64 +1,52 @@
-## Plan: Per-Outlet Seeding for Test Users + Courses
+## Plan: Server-Verified Certificate Issuance
 
-### Outlet assignments
+### Scope
 
-11 test users distributed across the 3 outlets. Each user emailed `test+<slug>@skyportco.test`, password `TestPass!2026`, flagged `is_test_account = true`.
+Make certificate issuance impossible from the client. The database becomes the only path to inserting a row in `certificates`, and it only does so after verifying every quiz attached to the course has a passing attempt by the caller.
 
-**Mesa Verde Cantina** (existing course)
-- `test+server` — server
-- `test+hostess` — hostess
-- `test+bartender` — bartender
-- `test+manager` — manager role (oversees Mesa Verde roster)
+### Database changes (one migration)
 
-**Altitude Burger Co.**
-- `test+linecook` — line_cook
-- `test+prepcook` — prep_cook
-- `test+dishwasher` — dishwasher
-- `test+foodrunner` — food_runner
+1. **Drop** the `Users insert own certificate` INSERT policy on `public.certificates`. Keep the two SELECT policies (own + manager/admin).
 
-**Rocky Brew Coffee**
-- `test+supervisor` — supervisor
-- `test+newmanager` — new_manager
-- `test+admin` — admin role (cross-outlet visibility; outlet_id = Rocky Brew for profile completeness)
+2. **Add** a SECURITY DEFINER function `public.issue_certificate_if_complete(_course_id uuid)`:
+   - Requires `auth.uid()` (raises `not_authenticated` otherwise).
+   - Resolves all quizzes belonging to `_course_id` (via `modules`).
+   - If the course has zero quizzes → raises `course_has_no_quizzes` (prevents trivially "completing" an empty course).
+   - Checks that for every such quiz the caller has at least one `quiz_attempts` row with `passed = true`. If not → raises `course_not_complete`.
+   - If a certificate already exists for `(user_id, course_id)` → returns the existing row (idempotent, no duplicate insert).
+   - Otherwise inserts a new row with a serial generated as `'SKY-' || upper(translate(encode(gen_random_bytes(6), 'base64'), '+/=', 'xyz'))` (cryptographically random, ~10 chars).
+   - Returns `(certificate_id uuid, serial text, issued_at timestamptz, already_existed boolean)`.
+   - `GRANT EXECUTE … TO authenticated`.
 
-### Course cloning
+### App code changes
 
-Clone the existing Mesa Verde "Server Training" course (modules → chapters → quizzes → quiz_questions) into two new courses, one per outlet:
-- `Server Training — Altitude Burger Co.` (outlet_id = Altitude)
-- `Server Training — Rocky Brew Coffee` (outlet_id = Rocky Brew)
+3. **`src/routes/_authenticated/quiz.$quizId.tsx`** — replace the client-side certificate flow after a passing `grade_quiz` result:
+   - Remove the `quiz_attempts` fetch, the `allQuizIds.every(...)` check, the `certificates` SELECT/INSERT, and the `shortSerial()` call.
+   - Replace with a single `supabase.rpc("issue_certificate_if_complete", { _course_id: courseId })` call.
+   - If it returns a row and `already_existed === false`, show the existing "🎓 Certificate of completion issued!" toast.
+   - If it raises `course_not_complete`, swallow silently (user just passed one quiz of many — that's expected).
+   - Any other error → `toast.error(error.message)`.
 
-Cloning preserves structure (same module/chapter/quiz/question counts and content) so course-player, quiz, and certificate pages render identically for users at any outlet. New UUIDs for every cloned row; passing-score and ordering copied verbatim.
+4. **`src/lib/training-helpers.ts`** — remove the now-unused `shortSerial()` export.
 
-### Schema change
+### Security memory
 
-Add `is_test_account boolean NOT NULL DEFAULT false` to `profiles` so test fixtures are identifiable and can be excluded from production manager rosters later.
+5. Update `mem`/security memory to record:
+   - Direct INSERT on `certificates` is forbidden; issuance only via `issue_certificate_if_complete`.
+   - The new RPC is intentionally callable by `authenticated` — do not flag the corresponding linter warning.
+   - Serials are now generated server-side from `gen_random_bytes`, not `Math.random()`.
 
-### Seeding script
+### What this does NOT cover (separate findings, separate fixes)
 
-`scripts/seed-test-users.ts` (run with `bun scripts/seed-test-users.ts`):
+- Manager-only RLS on `invites` INSERT (finding #2).
+- `chapter_progress` enrollment check (finding #4).
+- Restricting `outlets` SELECT to authenticated (finding #5).
 
-1. Reads `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` from env.
-2. **Idempotent course clone**: looks up Mesa Verde course; for each of Altitude + Rocky Brew, upserts a clone keyed by `(outlet_id, title)`. Skips if clone already exists.
-3. **Idempotent user creation**: for each of the 11 fixtures, calls `auth.admin.listUsers` → if email exists, reuses id; else `auth.admin.createUser({ email_confirm: true })`.
-4. Upserts `profiles` row with `outlet_id`, `job_role`, `full_name`, `is_test_account = true`.
-5. Upserts `user_roles` row (`employee` / `manager` / `admin` per fixture).
-6. Logs created vs reused count per user for CI visibility.
+Each is a distinct policy/code change; bundling them would conflate fixes. Happy to do them next.
 
-Script is server-only; never imported into app code. Service role key stays in env.
+### Files touched
 
-### Playwright fixture exposure
-
-`tests/e2e/fixtures/test-users.ts` exports the 11 fixtures (email, password, role, outlet name, expected course title) so each Playwright spec can sign in as a role and assert the correct outlet + course render.
-
-### Files
-
-- New migration: `is_test_account` column on `profiles`
-- New: `scripts/seed-test-users.ts`
-- New: `tests/e2e/fixtures/test-users.ts`
-- No app code changes
-
-### Out of scope
-
-- Production filter to hide `is_test_account` users from manager rosters (follow-up)
-- Cleanup script (manual delete via dashboard)
-- Writing the Playwright specs themselves (next step after seeding lands)
+- New migration (drops policy, adds RPC, grants EXECUTE).
+- `src/routes/_authenticated/quiz.$quizId.tsx` (replace cert block with RPC call).
+- `src/lib/training-helpers.ts` (remove `shortSerial`).
+- Security memory note.
