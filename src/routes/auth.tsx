@@ -10,7 +10,10 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
-const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
+const searchSchema = z.object({
+  mode: z.enum(["signin", "signup"]).optional(),
+  code: z.string().optional(),
+});
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -20,8 +23,10 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { mode } = Route.useSearch();
-  const [tab, setTab] = useState<"signin" | "signup">(mode === "signup" ? "signup" : "signin");
+  const { mode, code } = Route.useSearch();
+  const [tab, setTab] = useState<"signin" | "signup">(
+    mode === "signup" || code ? "signup" : "signin",
+  );
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -53,7 +58,7 @@ function AuthPage() {
             <SignInForm onDone={() => navigate({ to: "/dashboard", replace: true })} />
           </TabsContent>
           <TabsContent value="signup">
-            <SignUpForm onDone={() => navigate({ to: "/dashboard", replace: true })} />
+            <SignUpForm initialCode={code} onDone={() => navigate({ to: "/dashboard", replace: true })} />
           </TabsContent>
         </Tabs>
       </div>
@@ -88,11 +93,11 @@ function SignInForm({ onDone }: { onDone: () => void }) {
   );
 }
 
-function SignUpForm({ onDone }: { onDone: () => void }) {
+function SignUpForm({ onDone, initialCode }: { onDone: () => void; initialCode?: string }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState((initialCode ?? "").toUpperCase());
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
