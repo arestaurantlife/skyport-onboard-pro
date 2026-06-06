@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
@@ -84,46 +83,25 @@ function SignUpForm({ onDone }: { onDone: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [inviteCode, setInviteCode] = useState("");
-  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      let outletId: string | null = null;
-      let jobRole: string | null = null;
-      let invitePk: string | null = null;
-
-      if (!isManager) {
-        if (!inviteCode.trim()) {
-          toast.error("Invite code is required (or check the manager box).");
-          setLoading(false);
-          return;
-        }
-        const { data: invite, error: inviteErr } = await supabase
-          .from("invites")
-          .select("id, outlet_id, job_role, used_by, expires_at")
-          .eq("code", inviteCode.trim().toUpperCase())
-          .maybeSingle();
-        if (inviteErr || !invite) {
-          toast.error("Invalid invite code.");
-          setLoading(false);
-          return;
-        }
-        if (invite.used_by) {
-          toast.error("This invite code has already been used.");
-          setLoading(false);
-          return;
-        }
-        if (new Date(invite.expires_at) < new Date()) {
-          toast.error("This invite code has expired.");
-          setLoading(false);
-          return;
-        }
-        outletId = invite.outlet_id;
-        jobRole = invite.job_role;
-        invitePk = invite.id;
+      const code = inviteCode.trim().toUpperCase();
+      if (!code) {
+        toast.error("Invite code is required.");
+        setLoading(false);
+        return;
+      }
+      // Validate without exposing the invites table.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: validateRows, error: validateErr } = await (supabase as any).rpc("validate_invite", { _code: code });
+      if (validateErr || !validateRows || validateRows.length === 0) {
+        toast.error("Invalid, expired, or already-used invite code.");
+        setLoading(false);
+        return;
       }
 
       const { data: signUp, error: signErr } = await supabase.auth.signUp({
@@ -146,24 +124,14 @@ function SignUpForm({ onDone }: { onDone: () => void }) {
         return;
       }
 
-      // Update profile with outlet + role
-      if (outletId && jobRole) {
-        await supabase.from("profiles").update({
-          full_name: fullName,
-          outlet_id: outletId,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          job_role: jobRole as any,
-        }).eq("id", userId);
-      } else {
-        await supabase.from("profiles").update({ full_name: fullName }).eq("id", userId);
-      }
-
-      if (isManager) {
-        await supabase.from("user_roles").insert({ user_id: userId, role: "manager" });
-      }
-
-      if (invitePk) {
-        await supabase.from("invites").update({ used_by: userId, used_at: new Date().toISOString() }).eq("id", invitePk);
+      await supabase.from("profiles").update({ full_name: fullName }).eq("id", userId);
+      // Atomically claim the invite (server-side: marks invite used + sets outlet/job_role).
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: claimErr } = await (supabase as any).rpc("claim_invite", { _code: code });
+      if (claimErr) {
+        toast.error(`Account created but invite claim failed: ${claimErr.message}`);
+        setLoading(false);
+        return;
       }
 
       toast.success("Welcome aboard!");
@@ -187,16 +155,10 @@ function SignUpForm({ onDone }: { onDone: () => void }) {
         <Label htmlFor="password2">Password</Label>
         <Input id="password2" type="password" autoComplete="new-password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      {!isManager && (
-        <div>
-          <Label htmlFor="invite">Invite code (from your manager)</Label>
-          <Input id="invite" required={!isManager} value={inviteCode} onChange={(e) => setInviteCode(e.target.value.toUpperCase())} placeholder="e.g. SERVER-MVC-7Q3X" />
-        </div>
-      )}
-      <label className="flex items-center gap-2 text-sm">
-        <Checkbox checked={isManager} onCheckedChange={(v) => setIsManager(!!v)} />
-        I'm setting up a manager account (admin/HR demo path).
-      </label>
+      <div>
+        <Label htmlFor="invite">Invite code (from your manager)</Label>
+        <Input id="invite" required value={inviteCode} onChange={(e) => setInviteCode(e.target.value.toUpperCase())} placeholder="e.g. SERVER-MVC-7Q3X" />
+      </div>
       <Button type="submit" className="w-full" disabled={loading}>{loading ? "Creating account..." : "Create account"}</Button>
       <p className="text-center text-xs text-muted-foreground">By signing up you agree to follow Skyportco / First Meridian Services policies.</p>
       <p className="text-center text-sm">
