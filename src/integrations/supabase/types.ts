@@ -429,12 +429,44 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_invite: {
+        Args: { _code: string }
+        Returns: {
+          job_role: Database["public"]["Enums"]["job_role"]
+          outlet_id: string
+        }[]
+      }
+      get_quiz_questions: {
+        Args: { _quiz_id: string }
+        Returns: {
+          choices: Json
+          id: string
+          order_idx: number
+          prompt: string
+        }[]
+      }
+      grade_quiz: {
+        Args: { _answers: Json; _quiz_id: string }
+        Returns: {
+          attempt_id: string
+          passed: boolean
+          score: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      validate_invite: {
+        Args: { _code: string }
+        Returns: {
+          id: string
+          job_role: Database["public"]["Enums"]["job_role"]
+          outlet_id: string
+        }[]
       }
     }
     Enums: {
