@@ -132,7 +132,10 @@ function ManagerHome() {
             <h1 className="text-3xl font-bold tracking-tight">Manager Dashboard</h1>
             <p className="mt-1 text-muted-foreground">Track new-hire onboarding progress and invite new employees.</p>
           </div>
-          <Button asChild variant="outline"><Link to="/dashboard">My training</Link></Button>
+          <div className="flex gap-2">
+            <Button asChild variant="outline"><Link to="/manager/audit">Certificate audit</Link></Button>
+            <Button asChild variant="outline"><Link to="/dashboard">My training</Link></Button>
+          </div>
         </div>
 
         {/* Invite creator */}
