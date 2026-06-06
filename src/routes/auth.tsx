@@ -65,9 +65,7 @@ function SignInForm({ onDone }: { onDone: () => void }) {
     else onDone();
   };
   return (
-    <>
-      <GoogleSignInButton />
-      <form onSubmit={submit} className="mt-6 space-y-4">
+    <form onSubmit={submit} className="mt-6 space-y-4">
       <div>
         <Label htmlFor="email">Email</Label>
         <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
