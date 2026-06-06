@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/quiz/$quizId")({
   component: QuizPage,
 });
 
-type Question = { id: string; prompt: string; choices: string[]; correct_index: number; order_idx: number };
+type Question = { id: string; prompt: string; choices: string[]; order_idx: number };
 
 function QuizPage() {
   const { quizId } = Route.useParams();
@@ -42,12 +42,10 @@ function QuizPage() {
   const { data: questions } = useQuery({
     queryKey: ["quiz-questions", quizId],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("quiz_questions")
-        .select("id, prompt, choices, correct_index, order_idx")
-        .eq("quiz_id", quizId)
-        .order("order_idx");
-      return (data ?? []).map((q) => ({ ...q, choices: q.choices as string[] })) as Question[];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (supabase as any).rpc("get_quiz_questions", { _quiz_id: quizId });
+      return ((data ?? []) as Array<{ id: string; prompt: string; choices: unknown; order_idx: number }>)
+        .map((q) => ({ id: q.id, prompt: q.prompt, choices: q.choices as string[], order_idx: q.order_idx })) as Question[];
     },
   });
 
@@ -72,25 +70,21 @@ function QuizPage() {
   if (!quiz || !questions || !tree) return <div className="p-10 text-muted-foreground">Loading...</div>;
 
   const submit = async () => {
-    const total = questions.length;
-    let correct = 0;
-    questions.forEach((q) => {
-      if (answers[q.id] === q.correct_index) correct++;
+    // Server-side grading: correct answers are never sent to the client.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: gradeRows, error: gradeErr } = await (supabase as any).rpc("grade_quiz", {
+      _quiz_id: quiz.id,
+      _answers: answers,
     });
-    const score = Math.round((correct / total) * 100);
-    const passed = score >= quiz.pass_threshold;
+    if (gradeErr || !gradeRows || gradeRows.length === 0) {
+      toast.error(gradeErr?.message ?? "Could not submit quiz. Please try again.");
+      return;
+    }
+    const { score, passed } = gradeRows[0] as { score: number; passed: boolean };
     setSubmitted({ score, passed });
 
     const { data: u } = await supabase.auth.getUser();
-    if (u.user) {
-      await supabase.from("quiz_attempts").insert({
-        user_id: u.user.id,
-        quiz_id: quiz.id,
-        score,
-        passed,
-        answers: Object.entries(answers).map(([qid, ai]) => ({ question_id: qid, answer_index: ai })),
-      });
-      if (passed) {
+    if (u.user && passed) {
         await qc.invalidateQueries({ queryKey: ["course-progress", courseId] });
         // check if this completes the course (all quizzes passed) → issue certificate
         const allQuizIds = tree.modules.flatMap((m) => m.quizzes.map((q) => q.id));
@@ -116,7 +110,6 @@ function QuizPage() {
             toast.success("🎓 Certificate of completion issued!");
           }
         }
-      }
     }
   };
 
@@ -175,8 +168,10 @@ function QuizPage() {
                   <div className="mt-4 grid gap-2">
                     {q.choices.map((c, ci) => {
                       const selected = answers[q.id] === ci;
-                      const showCorrect = submitted && ci === q.correct_index;
-                      const showWrong = submitted && selected && ci !== q.correct_index;
+                      // After submission we only know the user's score, not the answer key
+                      // (kept server-side). Highlight just the user's choice.
+                      const showCorrect = false;
+                      const showWrong = submitted && selected && !submitted.passed;
                       return (
                         <button
                           type="button"
