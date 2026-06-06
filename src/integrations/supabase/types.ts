@@ -182,6 +182,13 @@ export type Database = {
             referencedRelation: "outlets"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "courses_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       email_send_log: {
@@ -316,6 +323,13 @@ export type Database = {
             referencedRelation: "outlets"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "invites_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       modules: {
@@ -426,6 +440,13 @@ export type Database = {
             columns: ["outlet_id"]
             isOneToOne: false
             referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets_public"
             referencedColumns: ["id"]
           },
         ]
@@ -576,7 +597,24 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      outlets_public: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       claim_first_admin: { Args: never; Returns: boolean }
