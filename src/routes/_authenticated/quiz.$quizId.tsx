@@ -92,12 +92,12 @@ function QuizPage() {
         { _course_id: courseId },
       );
       if (certErr) {
-        // Expected when the user has only passed some quizzes — stay quiet.
-        if (certErr.message && !/course_not_complete/i.test(certErr.message)) {
-          toast.error(certErr.message);
+        toast.error(certErr.message);
+      } else if (certRows && certRows.length > 0) {
+        const row = certRows[0] as { outcome: string; already_existed: boolean };
+        if (row.outcome === "issued") {
+          toast.success("🎓 Certificate of completion issued!");
         }
-      } else if (certRows && certRows.length > 0 && certRows[0].already_existed === false) {
-        toast.success("🎓 Certificate of completion issued!");
       }
     }
   };
