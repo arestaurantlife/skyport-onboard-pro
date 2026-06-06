@@ -465,6 +465,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_first_admin: { Args: never; Returns: boolean }
       claim_invite: {
         Args: { _code: string }
         Returns: {
@@ -505,6 +506,14 @@ export type Database = {
           outcome: string
           serial: string
         }[]
+      }
+      set_user_role: {
+        Args: {
+          _grant: boolean
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
       }
       validate_invite: {
         Args: { _code: string }
