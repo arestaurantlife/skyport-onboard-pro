@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      certificate_audit_log: {
+        Row: {
+          certificate_id: string | null
+          course_id: string
+          created_at: string
+          id: string
+          outcome: string
+          quizzes_passed: number | null
+          quizzes_required: number | null
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          certificate_id?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          outcome: string
+          quizzes_passed?: number | null
+          quizzes_required?: number | null
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          certificate_id?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          outcome?: string
+          quizzes_passed?: number | null
+          quizzes_required?: number | null
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           course_id: string
@@ -466,6 +502,7 @@ export type Database = {
           already_existed: boolean
           certificate_id: string
           issued_at: string
+          outcome: string
           serial: string
         }[]
       }
