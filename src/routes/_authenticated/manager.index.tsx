@@ -134,6 +134,9 @@ function ManagerHome() {
           </div>
           <div className="flex gap-2">
             <Button asChild variant="outline"><Link to="/manager/audit">Certificate audit</Link></Button>
+            {me?.roles.includes("admin") && (
+              <Button asChild variant="outline"><Link to="/manager/admin">Roles</Link></Button>
+            )}
             <Button asChild variant="outline"><Link to="/dashboard">My training</Link></Button>
           </div>
         </div>

@@ -17,6 +17,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedManagerIndexRouteImport } from './routes/_authenticated/manager.index'
 import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
 import { Route as AuthenticatedManagerAuditRouteImport } from './routes/_authenticated/manager.audit'
+import { Route as AuthenticatedManagerAdminRouteImport } from './routes/_authenticated/manager.admin'
 import { Route as AuthenticatedLearnChapterIdRouteImport } from './routes/_authenticated/learn.$chapterId'
 import { Route as AuthenticatedCoursesCourseIdRouteImport } from './routes/_authenticated/courses.$courseId'
 import { Route as AuthenticatedCertificateCourseIdRouteImport } from './routes/_authenticated/certificate.$courseId'
@@ -63,6 +64,12 @@ const AuthenticatedManagerAuditRoute =
     path: '/manager/audit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedManagerAdminRoute =
+  AuthenticatedManagerAdminRouteImport.update({
+    id: '/manager/admin',
+    path: '/manager/admin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLearnChapterIdRoute =
   AuthenticatedLearnChapterIdRouteImport.update({
     id: '/learn/$chapterId',
@@ -96,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/certificate/$courseId': typeof AuthenticatedCertificateCourseIdRoute
   '/courses/$courseId': typeof AuthenticatedCoursesCourseIdRoute
   '/learn/$chapterId': typeof AuthenticatedLearnChapterIdRoute
+  '/manager/admin': typeof AuthenticatedManagerAdminRoute
   '/manager/audit': typeof AuthenticatedManagerAuditRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
   '/manager/': typeof AuthenticatedManagerIndexRoute
@@ -109,6 +117,7 @@ export interface FileRoutesByTo {
   '/certificate/$courseId': typeof AuthenticatedCertificateCourseIdRoute
   '/courses/$courseId': typeof AuthenticatedCoursesCourseIdRoute
   '/learn/$chapterId': typeof AuthenticatedLearnChapterIdRoute
+  '/manager/admin': typeof AuthenticatedManagerAdminRoute
   '/manager/audit': typeof AuthenticatedManagerAuditRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
   '/manager': typeof AuthenticatedManagerIndexRoute
@@ -124,6 +133,7 @@ export interface FileRoutesById {
   '/_authenticated/certificate/$courseId': typeof AuthenticatedCertificateCourseIdRoute
   '/_authenticated/courses/$courseId': typeof AuthenticatedCoursesCourseIdRoute
   '/_authenticated/learn/$chapterId': typeof AuthenticatedLearnChapterIdRoute
+  '/_authenticated/manager/admin': typeof AuthenticatedManagerAdminRoute
   '/_authenticated/manager/audit': typeof AuthenticatedManagerAuditRoute
   '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
   '/_authenticated/manager/': typeof AuthenticatedManagerIndexRoute
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/certificate/$courseId'
     | '/courses/$courseId'
     | '/learn/$chapterId'
+    | '/manager/admin'
     | '/manager/audit'
     | '/quiz/$quizId'
     | '/manager/'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/certificate/$courseId'
     | '/courses/$courseId'
     | '/learn/$chapterId'
+    | '/manager/admin'
     | '/manager/audit'
     | '/quiz/$quizId'
     | '/manager'
@@ -166,6 +178,7 @@ export interface FileRouteTypes {
     | '/_authenticated/certificate/$courseId'
     | '/_authenticated/courses/$courseId'
     | '/_authenticated/learn/$chapterId'
+    | '/_authenticated/manager/admin'
     | '/_authenticated/manager/audit'
     | '/_authenticated/quiz/$quizId'
     | '/_authenticated/manager/'
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManagerAuditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/manager/admin': {
+      id: '/_authenticated/manager/admin'
+      path: '/manager/admin'
+      fullPath: '/manager/admin'
+      preLoaderRoute: typeof AuthenticatedManagerAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/learn/$chapterId': {
       id: '/_authenticated/learn/$chapterId'
       path: '/learn/$chapterId'
@@ -273,6 +293,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCertificateCourseIdRoute: typeof AuthenticatedCertificateCourseIdRoute
   AuthenticatedCoursesCourseIdRoute: typeof AuthenticatedCoursesCourseIdRoute
   AuthenticatedLearnChapterIdRoute: typeof AuthenticatedLearnChapterIdRoute
+  AuthenticatedManagerAdminRoute: typeof AuthenticatedManagerAdminRoute
   AuthenticatedManagerAuditRoute: typeof AuthenticatedManagerAuditRoute
   AuthenticatedQuizQuizIdRoute: typeof AuthenticatedQuizQuizIdRoute
   AuthenticatedManagerIndexRoute: typeof AuthenticatedManagerIndexRoute
@@ -284,6 +305,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCertificateCourseIdRoute: AuthenticatedCertificateCourseIdRoute,
   AuthenticatedCoursesCourseIdRoute: AuthenticatedCoursesCourseIdRoute,
   AuthenticatedLearnChapterIdRoute: AuthenticatedLearnChapterIdRoute,
+  AuthenticatedManagerAdminRoute: AuthenticatedManagerAdminRoute,
   AuthenticatedManagerAuditRoute: AuthenticatedManagerAuditRoute,
   AuthenticatedQuizQuizIdRoute: AuthenticatedQuizQuizIdRoute,
   AuthenticatedManagerIndexRoute: AuthenticatedManagerIndexRoute,
