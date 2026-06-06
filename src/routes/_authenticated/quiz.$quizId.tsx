@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, XCircle, RotateCcw, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { shortSerial } from "@/lib/training-helpers";
 
 export const Route = createFileRoute("/_authenticated/quiz/$quizId")({
   component: QuizPage,
@@ -86,30 +85,20 @@ function QuizPage() {
     const { data: u } = await supabase.auth.getUser();
     if (u.user && passed) {
         await qc.invalidateQueries({ queryKey: ["course-progress", courseId] });
-        // check if this completes the course (all quizzes passed) → issue certificate
-        const allQuizIds = tree.modules.flatMap((m) => m.quizzes.map((q) => q.id));
-        const { data: attempts } = await supabase
-          .from("quiz_attempts")
-          .select("quiz_id, passed")
-          .eq("user_id", u.user.id)
-          .in("quiz_id", allQuizIds);
-        const passedSet = new Set((attempts ?? []).filter((a) => a.passed).map((a) => a.quiz_id));
-        if (allQuizIds.every((id) => passedSet.has(id))) {
-          const { data: existing } = await supabase
-            .from("certificates")
-            .select("id")
-            .eq("user_id", u.user.id)
-            .eq("course_id", courseId!)
-            .maybeSingle();
-          if (!existing) {
-            await supabase.from("certificates").insert({
-              user_id: u.user.id,
-              course_id: courseId!,
-              serial: shortSerial(),
-            });
-            toast.success("🎓 Certificate of completion issued!");
-          }
+      // Server verifies all quizzes are passed before inserting the certificate.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: certRows, error: certErr } = await (supabase as any).rpc(
+        "issue_certificate_if_complete",
+        { _course_id: courseId },
+      );
+      if (certErr) {
+        // Expected when the user has only passed some quizzes — stay quiet.
+        if (certErr.message && !/course_not_complete/i.test(certErr.message)) {
+          toast.error(certErr.message);
         }
+      } else if (certRows && certRows.length > 0 && certRows[0].already_existed === false) {
+        toast.success("🎓 Certificate of completion issued!");
+      }
     }
   };
 
