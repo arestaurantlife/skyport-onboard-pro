@@ -13,7 +13,7 @@ import { Copy, Plus, Users, AlertTriangle } from "lucide-react";
 import { getCurrentProfile, JOB_ROLE_LABELS, newInviteCode, type JobRole } from "@/lib/training-helpers";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/manager")({
+export const Route = createFileRoute("/_authenticated/manager/")({
   component: ManagerHome,
 });
 
