@@ -82,12 +82,12 @@ function Dashboard() {
       </div>
 
       {!me.profile?.outlet_id || !me.profile?.job_role ? (
-        <div className="mt-8 rounded-xl border border-amber-300 bg-amber-50 p-6 dark:bg-amber-950/30">
+        <div className="mt-8 rounded-xl border border-accent/40 bg-accent/10 p-6">
           <div className="flex items-start gap-3">
-            <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />
+            <ShieldAlert className="mt-0.5 h-5 w-5 text-accent-foreground" />
             <div>
-              <p className="font-semibold text-amber-900 dark:text-amber-200">No training assigned yet</p>
-              <p className="mt-1 text-sm text-amber-800 dark:text-amber-300">
+              <p className="font-semibold text-foreground">No training assigned yet</p>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Your account isn't linked to an outlet or role yet. Ask your manager to send you an invite code, then create your account using it.
               </p>
             </div>
