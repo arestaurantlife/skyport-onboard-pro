@@ -35,7 +35,16 @@ function AuthPage() {
       <div className="mx-auto flex max-w-md flex-col px-6 py-16">
         <h1 className="text-3xl font-bold tracking-tight">Welcome</h1>
         <p className="mt-2 text-muted-foreground">Sign in or create your training account.</p>
-        <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")} className="mt-8">
+        <GoogleSignInButton />
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+          </div>
+        </div>
+        <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign in</TabsTrigger>
             <TabsTrigger value="signup">Sign up</TabsTrigger>
