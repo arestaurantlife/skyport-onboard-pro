@@ -21,10 +21,9 @@ function Index() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-hero)" }} />
-        <div className="absolute inset-0 -z-10 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div className="mx-auto max-w-7xl px-6 py-24 text-primary-foreground md:py-32">
+      <section className="relative overflow-hidden border-b border-border" style={{ background: "var(--gradient-hero)" }}>
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="relative mx-auto max-w-7xl px-6 py-24 text-primary-foreground md:py-32">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">
             <Plane className="h-3 w-3" /> Denver International Airport
           </div>
