@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Plus, Users, AlertTriangle } from "lucide-react";
+import { Copy, Plus, Users, AlertTriangle, Mail, Send } from "lucide-react";
 import { getCurrentProfile, JOB_ROLE_LABELS, newInviteCode, type JobRole } from "@/lib/training-helpers";
 import { toast } from "sonner";
+import { sendTransactionalEmail } from "@/lib/email/send";
 
 export const Route = createFileRoute("/_authenticated/manager/")({
   component: ManagerHome,
@@ -63,7 +64,7 @@ function ManagerHome() {
     queryFn: async () => {
       const { data } = await supabase
         .from("invites")
-        .select("id, code, job_role, outlet_id, used_by, expires_at, created_at, outlets(name)")
+        .select("id, code, job_role, outlet_id, used_by, expires_at, created_at, invitee_email, outlets(name)")
         .order("created_at", { ascending: false })
         .limit(20);
       return data ?? [];
@@ -75,7 +76,9 @@ function ManagerHome() {
   // form state
   const [formOutlet, setFormOutlet] = useState<string>("");
   const [formRole, setFormRole] = useState<JobRole>("server");
+  const [formEmail, setFormEmail] = useState<string>("");
   const [creating, setCreating] = useState(false);
+  const [sendingId, setSendingId] = useState<string | null>(null);
 
   if (!me) return null;
   if (!isAuthorized) {
@@ -92,20 +95,96 @@ function ManagerHome() {
     );
   }
 
-  const createInvite = async () => {
+  const createInvite = async (opts: { email?: boolean } = {}) => {
     if (!formOutlet) { toast.error("Pick an outlet"); return; }
+    const wantsEmail = !!opts.email;
+    const recipient = formEmail.trim().toLowerCase();
+    if (wantsEmail && !recipient) { toast.error("Enter the employee's email"); return; }
     setCreating(true);
     const code = newInviteCode(formRole);
-    const { error } = await supabase.from("invites").insert({
-      code,
-      outlet_id: formOutlet,
-      job_role: formRole,
-      created_by: me.user.id,
-    });
+    const { data: inserted, error } = await supabase
+      .from("invites")
+      .insert({
+        code,
+        outlet_id: formOutlet,
+        job_role: formRole,
+        created_by: me.user.id,
+        invitee_email: recipient || null,
+      })
+      .select("id, code, expires_at, outlet_id, job_role, outlets(name)")
+      .single();
+    if (error || !inserted) {
+      setCreating(false);
+      toast.error(error?.message ?? "Failed to create invite");
+      return;
+    }
+    if (wantsEmail) {
+      try {
+        await emailInvite({
+          id: inserted.id,
+          code: inserted.code,
+          outletName: (inserted as any).outlets?.name ?? "your new outlet",
+          jobRole: inserted.job_role as JobRole,
+          expiresAt: inserted.expires_at,
+          recipient,
+        });
+        toast.success(`Invite created and emailed to ${recipient}`);
+      } catch (e: any) {
+        toast.error(`Invite created (${code}) but email failed: ${e.message ?? e}`);
+      }
+    } else {
+      toast.success(`Invite created: ${code}`);
+    }
+    setFormEmail("");
     setCreating(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success(`Invite created: ${code}`);
     qc.invalidateQueries({ queryKey: ["invites"] });
+  };
+
+  const emailInvite = async (args: {
+    id: string;
+    code: string;
+    outletName: string;
+    jobRole: JobRole;
+    expiresAt: string;
+    recipient: string;
+  }) => {
+    const signupUrl = `${window.location.origin}/auth?mode=signup&code=${encodeURIComponent(args.code)}`;
+    const expires = new Date(args.expiresAt).toLocaleDateString(undefined, {
+      month: "short", day: "numeric", year: "numeric",
+    });
+    await sendTransactionalEmail({
+      templateName: "employee-invite",
+      recipientEmail: args.recipient,
+      idempotencyKey: `invite-${args.id}`,
+      templateData: {
+        outletName: args.outletName,
+        jobRole: JOB_ROLE_LABELS[args.jobRole],
+        inviteCode: args.code,
+        signupUrl,
+        expiresAt: expires,
+        invitedByName: me.profile?.full_name || undefined,
+      },
+    });
+  };
+
+  const resendInvite = async (inv: any) => {
+    if (!inv.invitee_email) { toast.error("No email on file for this invite"); return; }
+    setSendingId(inv.id);
+    try {
+      await emailInvite({
+        id: inv.id,
+        code: inv.code,
+        outletName: inv.outlets?.name ?? "your new outlet",
+        jobRole: inv.job_role as JobRole,
+        expiresAt: inv.expires_at,
+        recipient: inv.invitee_email,
+      });
+      toast.success(`Re-sent to ${inv.invitee_email}`);
+    } catch (e: any) {
+      toast.error(`Failed: ${e.message ?? e}`);
+    } finally {
+      setSendingId(null);
+    }
   };
 
   const copyLink = (code: string) => {
@@ -145,7 +224,7 @@ function ManagerHome() {
         <section className="mt-8 rounded-xl border border-border bg-card p-6">
           <h2 className="flex items-center gap-2 text-lg font-bold"><Plus className="h-5 w-5" />Generate invite code</h2>
           <p className="mt-1 text-sm text-muted-foreground">One code → one new hire. Tied to outlet + role.</p>
-          <div className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
+          <div className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto_auto]">
             <div>
               <Label>Outlet</Label>
               <Select value={formOutlet} onValueChange={setFormOutlet}>
@@ -160,7 +239,18 @@ function ManagerHome() {
                 <SelectContent>{JOB_ROLES.map((r) => <SelectItem key={r} value={r}>{JOB_ROLE_LABELS[r]}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="flex items-end"><Button onClick={createInvite} disabled={creating} className="w-full">Create invite</Button></div>
+            <div>
+              <Label>Employee email (optional)</Label>
+              <Input type="email" value={formEmail} onChange={(e) => setFormEmail(e.target.value)} placeholder="new.hire@example.com" />
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={() => createInvite()} disabled={creating} className="w-full">Create</Button>
+            </div>
+            <div className="flex items-end">
+              <Button onClick={() => createInvite({ email: true })} disabled={creating} className="w-full">
+                <Send className="mr-1 h-4 w-4" />Create & email
+              </Button>
+            </div>
           </div>
 
           {invites && invites.length > 0 && (
@@ -171,8 +261,16 @@ function ManagerHome() {
                   <div key={inv.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background p-3 text-sm">
                     <code className="rounded bg-muted px-2 py-1 font-mono font-bold">{inv.code}</code>
                     <span className="text-muted-foreground">{JOB_ROLE_LABELS[inv.job_role as JobRole]} · {inv.outlets?.name}</span>
+                    {inv.invitee_email && (
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground"><Mail className="h-3 w-3" />{inv.invitee_email}</span>
+                    )}
                     {inv.used_by ? <Badge variant="secondary">Used</Badge> : <Badge>Unused</Badge>}
                     <Button size="sm" variant="ghost" onClick={() => copyLink(inv.code)}><Copy className="mr-1 h-3 w-3" />Copy</Button>
+                    {inv.invitee_email && !inv.used_by && (
+                      <Button size="sm" variant="ghost" disabled={sendingId === inv.id} onClick={() => resendInvite(inv)}>
+                        <Send className="mr-1 h-3 w-3" />{sendingId === inv.id ? "Sending…" : "Resend"}
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>

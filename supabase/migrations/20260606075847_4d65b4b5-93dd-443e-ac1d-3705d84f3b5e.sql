@@ -1,0 +1,1 @@
+ALTER TABLE public.invites ADD COLUMN IF NOT EXISTS invitee_email text;

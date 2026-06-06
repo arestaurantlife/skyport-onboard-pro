@@ -13,14 +13,18 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedManagerIndexRouteImport } from './routes/_authenticated/manager.index'
+import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
 import { Route as AuthenticatedManagerAuditRouteImport } from './routes/_authenticated/manager.audit'
 import { Route as AuthenticatedManagerAdminRouteImport } from './routes/_authenticated/manager.admin'
 import { Route as AuthenticatedLearnChapterIdRouteImport } from './routes/_authenticated/learn.$chapterId'
 import { Route as AuthenticatedCoursesCourseIdRouteImport } from './routes/_authenticated/courses.$courseId'
 import { Route as AuthenticatedCertificateCourseIdRouteImport } from './routes/_authenticated/certificate.$courseId'
+import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as AuthenticatedManagerEmployeesIdRouteImport } from './routes/_authenticated/manager.employees.$id'
 
@@ -43,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
+  id: '/email/unsubscribe',
+  path: '/email/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -54,6 +63,11 @@ const AuthenticatedManagerIndexRoute =
     path: '/manager/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
+  id: '/lovable/email/suppression',
+  path: '/lovable/email/suppression',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedQuizQuizIdRoute = AuthenticatedQuizQuizIdRouteImport.update({
   id: '/quiz/$quizId',
   path: '/quiz/$quizId',
@@ -89,6 +103,18 @@ const AuthenticatedCertificateCourseIdRoute =
     path: '/certificate/$courseId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const LovableEmailTransactionalSendRoute =
+  LovableEmailTransactionalSendRouteImport.update({
+    id: '/lovable/email/transactional/send',
+    path: '/lovable/email/transactional/send',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -107,30 +133,38 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/certificate/$courseId': typeof AuthenticatedCertificateCourseIdRoute
   '/courses/$courseId': typeof AuthenticatedCoursesCourseIdRoute
   '/learn/$chapterId': typeof AuthenticatedLearnChapterIdRoute
   '/manager/admin': typeof AuthenticatedManagerAdminRoute
   '/manager/audit': typeof AuthenticatedManagerAuditRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/manager/': typeof AuthenticatedManagerIndexRoute
   '/manager/employees/$id': typeof AuthenticatedManagerEmployeesIdRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/certificate/$courseId': typeof AuthenticatedCertificateCourseIdRoute
   '/courses/$courseId': typeof AuthenticatedCoursesCourseIdRoute
   '/learn/$chapterId': typeof AuthenticatedLearnChapterIdRoute
   '/manager/admin': typeof AuthenticatedManagerAdminRoute
   '/manager/audit': typeof AuthenticatedManagerAuditRoute
   '/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/manager': typeof AuthenticatedManagerIndexRoute
   '/manager/employees/$id': typeof AuthenticatedManagerEmployeesIdRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,15 +173,19 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/email/unsubscribe': typeof EmailUnsubscribeRoute
   '/_authenticated/certificate/$courseId': typeof AuthenticatedCertificateCourseIdRoute
   '/_authenticated/courses/$courseId': typeof AuthenticatedCoursesCourseIdRoute
   '/_authenticated/learn/$chapterId': typeof AuthenticatedLearnChapterIdRoute
   '/_authenticated/manager/admin': typeof AuthenticatedManagerAdminRoute
   '/_authenticated/manager/audit': typeof AuthenticatedManagerAuditRoute
   '/_authenticated/quiz/$quizId': typeof AuthenticatedQuizQuizIdRoute
+  '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/_authenticated/manager/': typeof AuthenticatedManagerIndexRoute
   '/_authenticated/manager/employees/$id': typeof AuthenticatedManagerEmployeesIdRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
+  '/lovable/email/transactional/send': typeof LovableEmailTransactionalSendRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,30 +194,38 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/dashboard'
+    | '/email/unsubscribe'
     | '/certificate/$courseId'
     | '/courses/$courseId'
     | '/learn/$chapterId'
     | '/manager/admin'
     | '/manager/audit'
     | '/quiz/$quizId'
+    | '/lovable/email/suppression'
     | '/manager/'
     | '/manager/employees/$id'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/auth'
     | '/dashboard'
+    | '/email/unsubscribe'
     | '/certificate/$courseId'
     | '/courses/$courseId'
     | '/learn/$chapterId'
     | '/manager/admin'
     | '/manager/audit'
     | '/quiz/$quizId'
+    | '/lovable/email/suppression'
     | '/manager'
     | '/manager/employees/$id'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   id:
     | '__root__'
     | '/'
@@ -187,15 +233,19 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/_authenticated/dashboard'
+    | '/email/unsubscribe'
     | '/_authenticated/certificate/$courseId'
     | '/_authenticated/courses/$courseId'
     | '/_authenticated/learn/$chapterId'
     | '/_authenticated/manager/admin'
     | '/_authenticated/manager/audit'
     | '/_authenticated/quiz/$quizId'
+    | '/lovable/email/suppression'
     | '/_authenticated/manager/'
     | '/_authenticated/manager/employees/$id'
     | '/lovable/email/queue/process'
+    | '/lovable/email/transactional/preview'
+    | '/lovable/email/transactional/send'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -203,7 +253,11 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
+  LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
+  LovableEmailTransactionalSendRoute: typeof LovableEmailTransactionalSendRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/email/unsubscribe': {
+      id: '/email/unsubscribe'
+      path: '/email/unsubscribe'
+      fullPath: '/email/unsubscribe'
+      preLoaderRoute: typeof EmailUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -249,6 +310,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/manager/'
       preLoaderRoute: typeof AuthenticatedManagerIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/lovable/email/suppression': {
+      id: '/lovable/email/suppression'
+      path: '/lovable/email/suppression'
+      fullPath: '/lovable/email/suppression'
+      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/quiz/$quizId': {
       id: '/_authenticated/quiz/$quizId'
@@ -291,6 +359,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/certificate/$courseId'
       preLoaderRoute: typeof AuthenticatedCertificateCourseIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/lovable/email/transactional/send': {
+      id: '/lovable/email/transactional/send'
+      path: '/lovable/email/transactional/send'
+      fullPath: '/lovable/email/transactional/send'
+      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
@@ -341,18 +423,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  EmailUnsubscribeRoute: EmailUnsubscribeRoute,
+  LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
+  LovableEmailTransactionalSendRoute: LovableEmailTransactionalSendRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

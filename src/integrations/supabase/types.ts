@@ -278,6 +278,7 @@ export type Database = {
           created_by: string | null
           expires_at: string
           id: string
+          invitee_email: string | null
           job_role: Database["public"]["Enums"]["job_role"]
           outlet_id: string
           used_at: string | null
@@ -289,6 +290,7 @@ export type Database = {
           created_by?: string | null
           expires_at?: string
           id?: string
+          invitee_email?: string | null
           job_role: Database["public"]["Enums"]["job_role"]
           outlet_id: string
           used_at?: string | null
@@ -300,6 +302,7 @@ export type Database = {
           created_by?: string | null
           expires_at?: string
           id?: string
+          invitee_email?: string | null
           job_role?: Database["public"]["Enums"]["job_role"]
           outlet_id?: string
           used_at?: string | null
