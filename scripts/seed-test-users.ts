@@ -65,7 +65,7 @@ async function cloneCourseForOutlet(outletId: string, newTitle: string) {
       title: newTitle,
       description: source.description,
       outlet_id: outletId,
-      passing_score: source.passing_score ?? null,
+      job_role: source.job_role ?? null,
     })
     .select("id")
     .single();
@@ -77,7 +77,7 @@ async function cloneCourseForOutlet(outletId: string, newTitle: string) {
     .from("modules")
     .select("*")
     .eq("course_id", source.id)
-    .order("order_index", { ascending: true });
+    .order("order_idx", { ascending: true });
   if (modErr) throw modErr;
 
   for (const m of modules ?? []) {
@@ -85,9 +85,10 @@ async function cloneCourseForOutlet(outletId: string, newTitle: string) {
       .from("modules")
       .insert({
         course_id: newCourseId,
+        day_number: m.day_number,
         title: m.title,
         description: m.description,
-        order_index: m.order_index,
+        order_idx: m.order_idx,
       })
       .select("id")
       .single();
@@ -97,61 +98,60 @@ async function cloneCourseForOutlet(outletId: string, newTitle: string) {
       .from("chapters")
       .select("*")
       .eq("module_id", m.id)
-      .order("order_index", { ascending: true });
+      .order("order_idx", { ascending: true });
     if (chErr) throw chErr;
 
     for (const c of chapters ?? []) {
-      const { data: newChap, error: ncErr } = await admin
+      const { error: ncErr } = await admin
         .from("chapters")
         .insert({
           module_id: newMod.id,
           title: c.title,
-          content: c.content,
+          body_markdown: c.body_markdown,
           video_url: c.video_url,
-          order_index: c.order_index,
-          duration_minutes: c.duration_minutes,
+          order_idx: c.order_idx,
+          estimated_minutes: c.estimated_minutes,
+        });
+      if (ncErr) throw ncErr;
+    }
+
+    // Quizzes attach to modules, not chapters
+    const { data: quizzes, error: qzErr } = await admin
+      .from("quizzes")
+      .select("*")
+      .eq("module_id", m.id);
+    if (qzErr) throw qzErr;
+
+    for (const q of quizzes ?? []) {
+      const { data: newQuiz, error: nqErr } = await admin
+        .from("quizzes")
+        .insert({
+          module_id: newMod.id,
+          title: q.title,
+          pass_threshold: q.pass_threshold,
         })
         .select("id")
         .single();
-      if (ncErr) throw ncErr;
+      if (nqErr) throw nqErr;
 
-      const { data: quizzes, error: qzErr } = await admin
-        .from("quizzes")
+      const { data: questions, error: qErr } = await admin
+        .from("quiz_questions")
         .select("*")
-        .eq("chapter_id", c.id);
-      if (qzErr) throw qzErr;
+        .eq("quiz_id", q.id)
+        .order("order_idx", { ascending: true });
+      if (qErr) throw qErr;
 
-      for (const q of quizzes ?? []) {
-        const { data: newQuiz, error: nqErr } = await admin
-          .from("quizzes")
-          .insert({
-            chapter_id: newChap.id,
-            title: q.title,
-            passing_score: q.passing_score,
-          })
-          .select("id")
-          .single();
-        if (nqErr) throw nqErr;
-
-        const { data: questions, error: qErr } = await admin
-          .from("quiz_questions")
-          .select("*")
-          .eq("quiz_id", q.id)
-          .order("order_index", { ascending: true });
-        if (qErr) throw qErr;
-
-        if (questions && questions.length > 0) {
-          const { error: insQErr } = await admin.from("quiz_questions").insert(
-            questions.map((qq) => ({
-              quiz_id: newQuiz.id,
-              question: qq.question,
-              options: qq.options,
-              correct_answer: qq.correct_answer,
-              order_index: qq.order_index,
-            })),
-          );
-          if (insQErr) throw insQErr;
-        }
+      if (questions && questions.length > 0) {
+        const { error: insQErr } = await admin.from("quiz_questions").insert(
+          questions.map((qq) => ({
+            quiz_id: newQuiz.id,
+            prompt: qq.prompt,
+            choices: qq.choices,
+            correct_index: qq.correct_index,
+            order_idx: qq.order_idx,
+          })),
+        );
+        if (insQErr) throw insQErr;
       }
     }
   }
