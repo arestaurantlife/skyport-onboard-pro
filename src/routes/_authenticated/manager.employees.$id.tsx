@@ -129,7 +129,7 @@ function EmployeePage() {
                     const weak = best && !best.passed;
                     return (
                       <li key={q.id} className="flex items-center gap-3 py-2 text-sm">
-                        {best?.passed ? <CheckCircle2 className="h-4 w-4 text-primary" /> : weak ? <AlertTriangle className="h-4 w-4 text-amber-500" /> : <XCircle className="h-4 w-4 text-muted-foreground/40" />}
+                        {best?.passed ? <CheckCircle2 className="h-4 w-4 text-primary" /> : weak ? <AlertTriangle className="h-4 w-4 text-accent" /> : <XCircle className="h-4 w-4 text-muted-foreground/40" />}
                         <span className="flex-1 font-medium">{q.title}</span>
                         {best ? (
                           <Badge variant={best.passed ? "secondary" : "destructive"}>{best.score}%</Badge>

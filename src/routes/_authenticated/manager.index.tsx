@@ -83,7 +83,7 @@ function ManagerHome() {
       <div className="min-h-screen bg-background">
         <SiteHeader />
         <div className="mx-auto max-w-md px-6 py-20 text-center">
-          <AlertTriangle className="mx-auto h-10 w-10 text-amber-500" />
+          <AlertTriangle className="mx-auto h-10 w-10 text-accent" />
           <h1 className="mt-4 text-2xl font-bold">Manager access only</h1>
           <p className="mt-2 text-muted-foreground">Your account doesn't have manager permissions.</p>
           <Button asChild className="mt-6"><Link to="/dashboard">Back to dashboard</Link></Button>
