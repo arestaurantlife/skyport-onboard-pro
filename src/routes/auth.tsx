@@ -70,14 +70,37 @@ function SignInForm({ onDone }: { onDone: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hint, setHint] = useState<string | null>(null);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setHint(null);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) toast.error(error.message);
-    else onDone();
+    if (error) {
+      toast.error(error.message);
+      if (/invalid login credentials/i.test(error.message)) {
+        setHint(
+          "That email and password combination didn't match. If you originally joined with Google, use the Google button above. Otherwise send yourself a reset link below.",
+        );
+      }
+      return;
+    }
+    onDone();
   };
+
+  const sendReset = async () => {
+    if (!email) {
+      toast.error("Enter your email first.");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) toast.error(error.message);
+    else toast.success("Reset link sent. Check your inbox.");
+  };
+
   return (
     <form onSubmit={submit} className="mt-6 space-y-4">
       <div>
@@ -88,7 +111,13 @@ function SignInForm({ onDone }: { onDone: () => void }) {
         <Label htmlFor="password">Password</Label>
         <Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
+      {hint && (
+        <p className="rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">{hint}</p>
+      )}
       <Button type="submit" className="w-full" disabled={loading}>{loading ? "Signing in..." : "Sign in"}</Button>
+      <button type="button" onClick={sendReset} className="w-full text-center text-sm text-primary underline">
+        Forgot your password? Email me a reset link
+      </button>
     </form>
   );
 }
