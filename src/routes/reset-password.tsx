@@ -33,10 +33,15 @@ function ResetPassword() {
     setLoading(false);
     if (error) {
       toast.error(error.message);
+      navigate({
+        to: "/password-reset-status",
+        search: { status: "error", reason: error.message },
+        replace: true,
+      });
       return;
     }
-    toast.success("Password updated. You're signed in.");
-    navigate({ to: "/dashboard", replace: true });
+    toast.success("Password updated.");
+    navigate({ to: "/password-reset-status", search: { status: "success" }, replace: true });
   };
 
   return (
