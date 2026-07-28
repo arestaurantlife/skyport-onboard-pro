@@ -67,10 +67,44 @@ function AdminRoles() {
           <p className="mt-2 text-muted-foreground">
             This page lets admins grant manager or admin roles to other users.
           </p>
+          <div className="mt-6 rounded-xl border border-border bg-card p-4 text-left text-sm">
+            <div className="font-semibold">Admin onboarding</div>
+            <dl className="mt-3 space-y-1">
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted-foreground">Signed in as</dt>
+                <dd className="truncate font-medium">{me.user.email}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted-foreground">Current roles</dt>
+                <dd className="font-medium">{me.roles.length ? me.roles.join(", ") : "none"}</dd>
+              </div>
+            </dl>
+            <ol className="mt-4 list-decimal space-y-2 pl-5 text-muted-foreground">
+              <li>
+                If this is the very first account on the platform, press <strong>Claim admin</strong> below —
+                it works only while no admin exists.
+              </li>
+              <li>
+                If an admin already exists, ask them to open this page and switch the <strong>Admin</strong>{" "}
+                toggle on for <strong>{me.user.email}</strong>.
+              </li>
+              <li>
+                After the role is granted, sign out and back in so your session picks it up.
+              </li>
+              <li>
+                Wrong account? Sign out and sign in with the email that holds the admin role. If the password
+                fails, use <strong>“Email me a reset link”</strong> on the sign-in page, or the Google button
+                if the account was created with Google.
+              </li>
+            </ol>
+          </div>
           <div className="mt-6 space-y-3">
             <Button onClick={claimAdmin} className="w-full">
               <ShieldCheck className="mr-2 h-4 w-4" />
               Claim admin (first user only)
+            </Button>
+            <Button asChild variant="ghost" className="w-full">
+              <Link to="/auth">Switch account</Link>
             </Button>
             <Button asChild variant="outline" className="w-full">
               <Link to="/dashboard">Back to dashboard</Link>
