@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,10 +32,15 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { mode, code } = Route.useSearch();
   const [tab, setTab] = useState<"signin" | "signup">(
     mode === "signup" || code ? "signup" : "signin",
   );
+
+  if (location.pathname === "/auth/callback") {
+    return <Outlet />;
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
