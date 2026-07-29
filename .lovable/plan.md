@@ -1,33 +1,36 @@
-## 1. Admin login
+## Plan
 
-An admin already exists in the database, so the "Claim admin" button on `/manager/admin` won't work for a second account. Two options:
+1. **Add a dedicated auth callback route**
+   - Create a public `/auth/callback` page that handles password-reset links before the user reaches the password form.
+   - Support both modern reset-link formats:
+     - `?code=...` links by exchanging the code for a session.
+     - `?token_hash=...&type=recovery` links by verifying the recovery token.
+   - If the link is expired, already used, or invalid, redirect to the password reset status page with a clear error instead of leaving the admin on a broken reset screen.
 
-- **A. Use the seeded test admin** — sign in at `/auth` with `test+admin@skyportco.test` (whatever password was set when seeded).
-- **B. Promote your current Google account** (`arestaurant.life@gmail.com`) to admin via a one-line DB migration. This is the recommended option going forward. After it runs, sign out and back in, then open `/manager/admin` — you'll see the role toggles for every user and can grant `manager` / `admin` to others from the UI.
+2. **Update reset-email redirect target**
+   - Change the “Forgot password” flow to send reset emails to `/auth/callback?next=/reset-password` instead of directly to `/reset-password`.
+   - This gives the app one safe place to process the secure token/session, then forward the admin to the password form.
 
-I'll go with **B** unless you say otherwise.
+3. **Harden the reset password page**
+   - On `/reset-password`, confirm a valid recovery session exists before allowing password update.
+   - Show a clear message if the reset page is opened directly or the link has expired.
+   - Add a confirm-password field to prevent mistyped passwords.
+   - After a successful password update, sign the user out and send them to `/password-reset-status?status=success` so they can sign in cleanly with the new password.
 
-## 2. Email invites to new employees
+4. **Improve the status page**
+   - Add clear recovery states:
+     - password updated successfully
+     - reset link expired/invalid
+     - reset page opened without a valid reset session
+   - Provide buttons to return to sign in or request a fresh reset email.
 
-Today managers create invites on `/manager` and copy the code manually. I'll add an "email this invite" flow.
+5. **Make admin access clearer and operational**
+   - Keep `/manager/admin` as the admin control center.
+   - Add clear admin guidance on the sign-in/reset pages: if the admin account uses Google, use Google sign-in; if using password, request a fresh reset link and use the newest email only.
+   - Verify the known admin account remains assigned the `admin` role after the reset-flow changes.
 
-**Backend**
-- Set up Lovable's transactional email infrastructure (uses the `notify.newrestaurantsowners.com` domain you already configured).
-- Add an `employee-invite` React Email template (branded: outlet name, job role, invite code, signup link, expiry).
-- Store an optional `invitee_email` on `public.invites` so we can resend / audit.
+## Current verified facts
 
-**Manager UI (`/manager`)**
-- Add an "Employee email" field next to Outlet / Job role.
-- "Create invite" stays the same; a new "Create & email invite" button creates the invite, then calls `/lovable/email/transactional/send` with the new template.
-- Each invite row gets a "Resend email" button when `invitee_email` is set.
-
-**Recipient experience**
-- Email contains the code + a one-click link to `/auth?mode=signup&code=ABC123` which prefills the invite field on the signup form.
-
-## Technical details
-
-- Migration: `INSERT INTO user_roles (user_id, role) VALUES ('7c73740e-…', 'admin')` and `ALTER TABLE invites ADD COLUMN invitee_email text`.
-- Tools: `email_domain--setup_email_infra` (if not idempotent-skipped) then `email_domain--scaffold_transactional_email`.
-- Template: `src/lib/email-templates/employee-invite.tsx`, registered in `registry.ts`.
-- Send helper: `src/lib/email/send.ts` posting to `/lovable/email/transactional/send` with the user's Supabase JWT; `idempotencyKey = invite-${invite.id}`.
-- `auth.tsx` reads `?code=` from the URL and prefills `inviteCode` state.
+- The admin account `arestaurant.life@gmail.com` exists and has the `admin` role.
+- Recovery emails for that account are being sent successfully.
+- The app currently sends reset links directly to `/reset-password`, but that page does not process callback codes/token hashes before calling password update. That is the part I will fix.
