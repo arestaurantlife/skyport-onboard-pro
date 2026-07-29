@@ -9,6 +9,16 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Clock, FileQuestion, PlayCircle } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/courses/$courseId")({
+  head: () => ({
+    meta: [
+      { title: "Course Overview — Skyportco Training" },
+      { name: "description", content: "View a Skyportco onboarding course, training modules, quizzes, and completion progress." },
+      { property: "og:title", content: "Course Overview — Skyportco Training" },
+      { property: "og:description", content: "Continue Skyportco onboarding modules, quizzes, and completion tracking." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: CourseOverview,
 });
 

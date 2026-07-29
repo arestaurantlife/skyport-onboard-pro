@@ -15,6 +15,16 @@ import { toast } from "sonner";
 import { sendTransactionalEmail } from "@/lib/email/send";
 
 export const Route = createFileRoute("/_authenticated/manager/")({
+  head: () => ({
+    meta: [
+      { title: "Manager Dashboard — Skyportco Training" },
+      { name: "description", content: "Manage Skyportco employee invites, training progress, outlet assignments, and onboarding completion." },
+      { property: "og:title", content: "Manager Dashboard — Skyportco Training" },
+      { property: "og:description", content: "Manage employee invites, training progress, and onboarding completion for Skyportco teams." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: ManagerHome,
 });
 

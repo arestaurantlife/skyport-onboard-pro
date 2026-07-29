@@ -12,6 +12,16 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/quiz/$quizId")({
+  head: () => ({
+    meta: [
+      { title: "Training Quiz — Skyportco Training" },
+      { name: "description", content: "Take a Skyportco onboarding quiz with secure server-side grading and completion tracking." },
+      { property: "og:title", content: "Training Quiz — Skyportco Training" },
+      { property: "og:description", content: "Complete Skyportco onboarding quizzes and track certification progress." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: QuizPage,
 });
 

@@ -9,6 +9,16 @@ import { getCurrentProfile, JOB_ROLE_LABELS, type JobRole } from "@/lib/training
 import { Award, ArrowRight, ShieldAlert, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Dashboard — Skyportco Training" },
+      { name: "description", content: "Review Skyportco employee training assignments, progress, certificates, and manager access." },
+      { property: "og:title", content: "Dashboard — Skyportco Training" },
+      { property: "og:description", content: "Access Skyportco training progress, certificates, and manager tools." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Dashboard,
 });
 
