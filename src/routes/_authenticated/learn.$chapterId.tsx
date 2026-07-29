@@ -10,6 +10,16 @@ import { Clock, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/learn/$chapterId")({
+  head: () => ({
+    meta: [
+      { title: "Training Chapter — Skyportco Training" },
+      { name: "description", content: "Complete a Skyportco training chapter and continue through the onboarding course sequence." },
+      { property: "og:title", content: "Training Chapter — Skyportco Training" },
+      { property: "og:description", content: "Study Skyportco training content and mark onboarding chapters complete." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: ChapterPage,
 });
 

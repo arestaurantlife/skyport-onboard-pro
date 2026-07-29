@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,22 +17,37 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Sign in — Skyportco Training" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in — Skyportco Training" },
+      { name: "description", content: "Sign in to the Skyportco employee training platform for Denver International Airport teams." },
+      { property: "og:title", content: "Sign in — Skyportco Training" },
+      { property: "og:description", content: "Access Skyportco training, manager tools, employee invites, quizzes, and certificates." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: AuthPage,
 });
 
 function AuthPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { mode, code } = Route.useSearch();
   const [tab, setTab] = useState<"signin" | "signup">(
     mode === "signup" || code ? "signup" : "signin",
   );
 
   useEffect(() => {
+    if (location.pathname === "/auth/callback") return;
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard", replace: true });
     });
-  }, [navigate]);
+  }, [location.pathname, navigate]);
+
+  if (location.pathname === "/auth/callback") {
+    return <Outlet />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,10 +110,10 @@ function SignInForm({ onDone }: { onDone: () => void }) {
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     });
     if (error) toast.error(error.message);
-    else toast.success("Reset link sent. Check your inbox.");
+    else toast.success("Reset link sent. Use the newest email in your inbox.");
   };
 
   return (
@@ -114,6 +129,10 @@ function SignInForm({ onDone }: { onDone: () => void }) {
       {hint && (
         <p className="rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">{hint}</p>
       )}
+      <p className="rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
+        Admin note: if this account was created with Google, use the Google button above. If you requested a password reset,
+        use only the newest reset email because older links expire after use.
+      </p>
       <Button type="submit" className="w-full" disabled={loading}>{loading ? "Signing in..." : "Sign in"}</Button>
       <button type="button" onClick={sendReset} className="w-full text-center text-sm text-primary underline">
         Forgot your password? Email me a reset link

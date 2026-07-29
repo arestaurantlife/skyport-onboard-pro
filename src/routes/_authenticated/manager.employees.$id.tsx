@@ -10,6 +10,16 @@ import { JOB_ROLE_LABELS, type JobRole, getCurrentProfile } from "@/lib/training
 import { loadCourseTree } from "@/lib/course-data";
 
 export const Route = createFileRoute("/_authenticated/manager/employees/$id")({
+  head: () => ({
+    meta: [
+      { title: "Employee Progress — Skyportco Training" },
+      { name: "description", content: "Review an employee's Skyportco training assignment, quiz scores, and onboarding completion progress." },
+      { property: "og:title", content: "Employee Progress — Skyportco Training" },
+      { property: "og:description", content: "Manager view for Skyportco employee training progress and quiz outcomes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: EmployeePage,
 });
 

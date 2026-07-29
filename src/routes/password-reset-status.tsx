@@ -54,7 +54,7 @@ function PasswordResetStatus() {
           {ok
             ? "Your new password is active. Sign in with your email address and the password you just chose."
             : reason ||
-              "The reset link may have expired or already been used. Request a new reset link from the sign-in page and try again."}
+              "The reset link may have expired, already been used, or opened without its security token. Request a new reset link from the sign-in page and use the newest email."}
         </p>
 
         <div className="mt-8 space-y-3">
@@ -65,14 +65,16 @@ function PasswordResetStatus() {
           </Button>
           {!ok && (
             <Button asChild variant="outline" className="w-full">
-              <Link to="/reset-password">Try setting a password again</Link>
+              <Link to="/auth" search={{ mode: "signin" }}>
+                Request a new reset email
+              </Link>
             </Button>
           )}
         </div>
 
         <p className="mt-8 text-sm text-muted-foreground">
-          Still stuck? Managers and admins who signed up with Google should use the{" "}
-          <strong>Sign in with Google</strong> button instead of a password.
+          Still stuck? Use only the newest reset email. Managers and admins who signed up with Google should use the{" "}
+          <strong>Sign in with Google</strong> button instead of a password reset.
         </p>
       </main>
     </div>

@@ -6,6 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Printer, ArrowLeft, Plane, Award } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/certificate/$courseId")({
+  head: () => ({
+    meta: [
+      { title: "Certificate — Skyportco Training" },
+      { name: "description", content: "View and print a verified Skyportco employee training certificate of completion." },
+      { property: "og:title", content: "Certificate — Skyportco Training" },
+      { property: "og:description", content: "Verified Skyportco training certificate for completed onboarding courses." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: CertificatePage,
 });
 

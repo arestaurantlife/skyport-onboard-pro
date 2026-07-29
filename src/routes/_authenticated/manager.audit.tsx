@@ -10,6 +10,16 @@ import { AlertTriangle, ShieldCheck } from "lucide-react";
 import { getCurrentProfile } from "@/lib/training-helpers";
 
 export const Route = createFileRoute("/_authenticated/manager/audit")({
+  head: () => ({
+    meta: [
+      { title: "Certificate Audit — Skyportco Training" },
+      { name: "description", content: "Review Skyportco certificate issuance attempts, outcomes, and completion audit history." },
+      { property: "og:title", content: "Certificate Audit — Skyportco Training" },
+      { property: "og:description", content: "Audit certificate issuance and training completion outcomes for Skyportco employees." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: AuditPage,
 });
 

@@ -9,6 +9,16 @@ import { getCurrentProfile, JOB_ROLE_LABELS, type JobRole } from "@/lib/training
 import { Award, ArrowRight, ShieldAlert, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Dashboard — Skyportco Training" },
+      { name: "description", content: "Review Skyportco employee training assignments, progress, certificates, and manager access." },
+      { property: "og:title", content: "Dashboard — Skyportco Training" },
+      { property: "og:description", content: "Access Skyportco training progress, certificates, and manager tools." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Dashboard,
 });
 
@@ -81,7 +91,22 @@ function Dashboard() {
         )}
       </div>
 
-      {!me.profile?.outlet_id || !me.profile?.job_role ? (
+      {me.roles.includes("admin") ? (
+        <div className="mt-8 rounded-xl border border-primary/30 bg-primary/5 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-foreground">Administrator access active</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Your account can manage employee invites, training progress, certificates, and role assignments.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild><Link to="/manager">Manager dashboard</Link></Button>
+              <Button asChild variant="outline"><Link to="/manager/admin">Role administration</Link></Button>
+            </div>
+          </div>
+        </div>
+      ) : !me.profile?.outlet_id || !me.profile?.job_role ? (
         <div className="mt-8 rounded-xl border border-accent/40 bg-accent/10 p-6">
           <div className="flex items-start gap-3">
             <ShieldAlert className="mt-0.5 h-5 w-5 text-accent-foreground" />

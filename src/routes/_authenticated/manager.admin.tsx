@@ -10,6 +10,16 @@ import { getCurrentProfile } from "@/lib/training-helpers";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/manager/admin")({
+  head: () => ({
+    meta: [
+      { title: "Role Administration — Skyportco Training" },
+      { name: "description", content: "Grant and revoke Skyportco manager and administrator roles from a secure admin page." },
+      { property: "og:title", content: "Role Administration — Skyportco Training" },
+      { property: "og:description", content: "Securely manage manager and administrator access for Skyportco Training." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: AdminRoles,
 });
 
