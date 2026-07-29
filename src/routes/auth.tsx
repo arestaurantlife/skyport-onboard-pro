@@ -38,15 +38,16 @@ function AuthPage() {
     mode === "signup" || code ? "signup" : "signin",
   );
 
-  if (location.pathname === "/auth/callback") {
-    return <Outlet />;
-  }
-
   useEffect(() => {
+    if (location.pathname === "/auth/callback") return;
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard", replace: true });
     });
-  }, [navigate]);
+  }, [location.pathname, navigate]);
+
+  if (location.pathname === "/auth/callback") {
+    return <Outlet />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
