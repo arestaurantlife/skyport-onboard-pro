@@ -1598,6 +1598,7 @@ export type Database = {
         Returns: boolean
       }
       invite_code_is_valid: { Args: { _code: string }; Returns: boolean }
+      is_content_author: { Args: never; Returns: boolean }
       issue_certificate_if_complete: {
         Args: { _course_id: string }
         Returns: {

@@ -222,6 +222,7 @@ function ManagerHome() {
             <p className="mt-1 text-muted-foreground">Track new-hire onboarding progress and invite new employees.</p>
           </div>
           <div className="flex gap-2">
+            <Button asChild variant="outline"><Link to="/manager/courses">Course builder</Link></Button>
             <Button asChild variant="outline"><Link to="/manager/audit">Certificate audit</Link></Button>
             {me?.roles.includes("admin") && (
               <Button asChild variant="outline"><Link to="/manager/admin">Roles</Link></Button>
