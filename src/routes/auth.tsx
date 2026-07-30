@@ -158,10 +158,10 @@ function SignUpForm({ onDone, initialCode }: { onDone: () => void; initialCode?:
         setLoading(false);
         return;
       }
-      // Validate without exposing the invites table.
+      // Validate without exposing the invites table (anon-safe boolean check).
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data: validateRows, error: validateErr } = await (supabase as any).rpc("validate_invite", { _code: code });
-      if (validateErr || !validateRows || validateRows.length === 0) {
+      const { data: isValid, error: validateErr } = await (supabase as any).rpc("invite_code_is_valid", { _code: code });
+      if (validateErr || isValid !== true) {
         toast.error("Invalid, expired, or already-used invite code.");
         setLoading(false);
         return;
