@@ -33,7 +33,7 @@ function EmployeePage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("id, full_name, email, job_role, outlet_id, hired_at, outlets(name, manager_name)")
+        .select("id, full_name, email, job_role, outlet_id, hired_at, outlets!profiles_outlet_id_fkey(name, manager_name)")
         .eq("id", id)
         .maybeSingle();
       return data;

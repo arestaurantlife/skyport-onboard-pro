@@ -14,6 +14,70 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_role_assignments: {
+        Row: {
+          app_role: Database["public"]["Enums"]["platform_role"]
+          created_at: string
+          granted_at: string
+          granted_by: string | null
+          id: string
+          org_id: string
+          outlet_scope_id: string | null
+          revoked_at: string | null
+          revoked_by: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          app_role: Database["public"]["Enums"]["platform_role"]
+          created_at?: string
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          org_id: string
+          outlet_scope_id?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          app_role?: Database["public"]["Enums"]["platform_role"]
+          created_at?: string
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          org_id?: string
+          outlet_scope_id?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_role_assignments_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "app_role_assignments_outlet_scope_id_fkey"
+            columns: ["outlet_scope_id"]
+            isOneToOne: false
+            referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "app_role_assignments_outlet_scope_id_fkey"
+            columns: ["outlet_scope_id"]
+            isOneToOne: false
+            referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certificate_audit_log: {
         Row: {
           certificate_id: string | null
@@ -332,6 +396,44 @@ export type Database = {
           },
         ]
       }
+      job_roles: {
+        Row: {
+          created_at: string
+          id: string
+          is_management: boolean
+          key: string
+          org_id: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_management?: boolean
+          key: string
+          org_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_management?: boolean
+          key?: string
+          org_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_roles_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       modules: {
         Row: {
           course_id: string
@@ -367,74 +469,149 @@ export type Database = {
           },
         ]
       }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          invite_expiry_days: number
+          legal_name: string
+          logo_url: string | null
+          name: string
+          pass_threshold_default: number
+          slug: string
+          unit_label: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invite_expiry_days?: number
+          legal_name?: string
+          logo_url?: string | null
+          name: string
+          pass_threshold_default?: number
+          slug: string
+          unit_label?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invite_expiry_days?: number
+          legal_name?: string
+          logo_url?: string | null
+          name?: string
+          pass_threshold_default?: number
+          slug?: string
+          unit_label?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       outlets: {
         Row: {
           brand_description: string
           concept: string
+          concourse: string | null
           created_at: string
           director_name: string
           hours: string
           id: string
           manager_name: string
           name: string
+          org_id: string | null
           terminal: string
         }
         Insert: {
           brand_description?: string
           concept: string
+          concourse?: string | null
           created_at?: string
           director_name?: string
           hours?: string
           id?: string
           manager_name?: string
           name: string
+          org_id?: string | null
           terminal?: string
         }
         Update: {
           brand_description?: string
           concept?: string
+          concourse?: string | null
           created_at?: string
           director_name?: string
           hours?: string
           id?: string
           manager_name?: string
           name?: string
+          org_id?: string | null
           terminal?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "outlets_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           created_at: string
           email: string
           full_name: string
+          hire_date: string | null
           hired_at: string
           id: string
           is_test_account: boolean
           job_role: Database["public"]["Enums"]["job_role"] | null
+          job_role_key: string | null
+          org_id: string | null
           outlet_id: string | null
+          preferred_language: string
+          primary_outlet_id: string | null
         }
         Insert: {
           created_at?: string
           email?: string
           full_name?: string
+          hire_date?: string | null
           hired_at?: string
           id: string
           is_test_account?: boolean
           job_role?: Database["public"]["Enums"]["job_role"] | null
+          job_role_key?: string | null
+          org_id?: string | null
           outlet_id?: string | null
+          preferred_language?: string
+          primary_outlet_id?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           full_name?: string
+          hire_date?: string | null
           hired_at?: string
           id?: string
           is_test_account?: boolean
           job_role?: Database["public"]["Enums"]["job_role"] | null
+          job_role_key?: string | null
+          org_id?: string | null
           outlet_id?: string | null
+          preferred_language?: string
+          primary_outlet_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_outlet_id_fkey"
             columns: ["outlet_id"]
@@ -445,6 +622,20 @@ export type Database = {
           {
             foreignKeyName: "profiles_outlet_id_fkey"
             columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_primary_outlet_id_fkey"
+            columns: ["primary_outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_primary_outlet_id_fkey"
+            columns: ["primary_outlet_id"]
             isOneToOne: false
             referencedRelation: "outlets_public"
             referencedColumns: ["id"]
@@ -625,6 +816,7 @@ export type Database = {
           outlet_id: string
         }[]
       }
+      current_org_ids: { Args: never; Returns: string[] }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -650,6 +842,10 @@ export type Database = {
           passed: boolean
           score: number
         }[]
+      }
+      has_app_role: {
+        Args: { target_org: string; target_role: string }
+        Returns: boolean
       }
       has_role: {
         Args: {
@@ -714,6 +910,14 @@ export type Database = {
         | "prep_cook"
         | "supervisor"
         | "new_manager"
+      platform_role:
+        | "super_admin"
+        | "org_admin"
+        | "director_of_operations"
+        | "general_manager"
+        | "manager"
+        | "assistant_manager"
+        | "trainee"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -852,6 +1056,15 @@ export const Constants = {
         "prep_cook",
         "supervisor",
         "new_manager",
+      ],
+      platform_role: [
+        "super_admin",
+        "org_admin",
+        "director_of_operations",
+        "general_manager",
+        "manager",
+        "assistant_manager",
+        "trainee",
       ],
     },
   },
