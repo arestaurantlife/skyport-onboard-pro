@@ -1588,6 +1588,8 @@ export type Database = {
         Args: { target_org: string; target_role: string }
         Returns: boolean
       }
+      has_manager_tier: { Args: { target_org: string }; Returns: boolean }
+      has_org_admin_tier: { Args: { target_org: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
