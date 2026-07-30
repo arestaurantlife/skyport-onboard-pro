@@ -8,6 +8,14 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Clock, FileQuestion, PlayCircle } from "lucide-react";
 
+function moduleLabel(moduleNumber: number) {
+  return moduleNumber === 0 ? "Orientation Module" : `Module ${moduleNumber}`;
+}
+
+function cleanModuleTitle(title: string) {
+  return title.replace(/^(Orientation (Day|Module)|Day \d+|Module \d+) — /, "");
+}
+
 export const Route = createFileRoute("/_authenticated/courses/$courseId")({
   head: () => ({
     meta: [
@@ -57,11 +65,11 @@ function CourseOverview() {
     <Shell>
       <div className="rounded-2xl bg-card p-8 shadow-sm" style={{ background: "var(--gradient-hero)" }}>
         <div className="text-primary-foreground">
-          <Badge className="bg-white/20 text-white hover:bg-white/30">5-day onboarding</Badge>
+          <Badge className="bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30">Module-based onboarding</Badge>
           <h1 className="mt-3 text-3xl font-bold">{tree.course.title}</h1>
-          <p className="mt-2 max-w-2xl text-white/85">{tree.course.description}</p>
+          <p className="mt-2 max-w-2xl text-primary-foreground/85">{tree.course.description}</p>
           {tree.course.outlets?.brand_description && (
-            <p className="mt-4 max-w-3xl text-sm text-white/75">{tree.course.outlets.brand_description}</p>
+            <p className="mt-4 max-w-3xl text-sm text-primary-foreground/75">{tree.course.outlets.brand_description}</p>
           )}
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {firstUnfinishedChapter && (
@@ -72,10 +80,10 @@ function CourseOverview() {
               </Button>
             )}
             <div className="min-w-[240px] flex-1">
-              <div className="mb-1 flex justify-between text-xs text-white/85">
+              <div className="mb-1 flex justify-between text-xs text-primary-foreground/85">
                 <span>Progress</span><span>{pct}%</span>
               </div>
-              <Progress value={pct} className="bg-white/20" />
+              <Progress value={pct} className="bg-primary-foreground/20" />
             </div>
           </div>
         </div>
@@ -87,9 +95,9 @@ function CourseOverview() {
             <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-primary">
-                  {mod.day_number === 0 ? "Orientation Day" : `Day ${mod.day_number}`}
+                  {moduleLabel(mod.day_number)}
                 </p>
-                <h2 className="text-xl font-bold">{mod.title.replace(/^(Orientation Day|Day \d+) — /, "")}</h2>
+                <h2 className="text-xl font-bold">{cleanModuleTitle(mod.title)}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{mod.description}</p>
               </div>
             </div>

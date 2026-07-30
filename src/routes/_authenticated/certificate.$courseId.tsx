@@ -65,10 +65,10 @@ function CertificatePage() {
             </div>
             <div className="my-6">
               <p className="text-sm uppercase tracking-widest text-muted-foreground">Certificate of Completion</p>
-              <h1 className="mt-3 text-5xl font-bold tracking-tight text-foreground" style={{ fontFamily: "Georgia, serif" }}>
+              <h1 className="mt-3 text-5xl font-bold tracking-tight text-foreground">
                 {me.profile?.full_name || me.user.email}
               </h1>
-              <p className="mt-4 text-base text-muted-foreground">has successfully completed the 5-day onboarding program</p>
+              <p className="mt-4 text-base text-muted-foreground">has successfully completed the module-based onboarding program</p>
               <p className="mt-2 text-xl font-semibold text-foreground">{cert.courses?.title}</p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {me.profile?.job_role && JOB_ROLE_LABELS[me.profile.job_role as JobRole]} · {cert.courses?.outlets?.name}

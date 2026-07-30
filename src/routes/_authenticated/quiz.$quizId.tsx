@@ -11,6 +11,10 @@ import { CheckCircle2, XCircle, RotateCcw, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+function moduleLabel(moduleNumber?: number) {
+  return moduleNumber === 0 ? "Orientation" : `Module ${moduleNumber ?? ""}`.trim();
+}
+
 export const Route = createFileRoute("/_authenticated/quiz/$quizId")({
   head: () => ({
     meta: [
@@ -132,7 +136,7 @@ function QuizPage() {
         <main className="flex-1">
           <div className="mx-auto max-w-3xl px-6 py-10">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              {quiz.modules?.day_number === 0 ? "Orientation" : `Day ${quiz.modules?.day_number}`} · Quiz
+              {moduleLabel(quiz.modules?.day_number)} · Quiz
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight">{quiz.title}</h1>
             <p className="mt-2 text-sm text-muted-foreground">Pass with {quiz.pass_threshold}% or higher. You can retake unlimited times.</p>

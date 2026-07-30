@@ -8,9 +8,15 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const [hasSession, setHasSession] = useState(false);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setHasSession(!!data.session));
+    let mounted = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted) setHasSession(!!data.session);
+    });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setHasSession(!!s));
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {

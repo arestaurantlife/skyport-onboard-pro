@@ -9,6 +9,14 @@ import { ArrowLeft, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { JOB_ROLE_LABELS, type JobRole, getCurrentProfile } from "@/lib/training-helpers";
 import { loadCourseTree } from "@/lib/course-data";
 
+function moduleLabel(moduleNumber: number) {
+  return moduleNumber === 0 ? "Orientation" : `Module ${moduleNumber}`;
+}
+
+function cleanModuleTitle(title: string) {
+  return title.replace(/^(Orientation (Day|Module)|Day \d+|Module \d+) — /, "");
+}
+
 export const Route = createFileRoute("/_authenticated/manager/employees/$id")({
   head: () => ({
     meta: [
@@ -124,9 +132,9 @@ function EmployeePage() {
             {tree.modules.map((mod) => (
               <div key={mod.id} className="rounded-xl border border-border bg-card p-6">
                 <p className="text-xs font-bold uppercase tracking-wider text-primary">
-                  {mod.day_number === 0 ? "Orientation" : `Day ${mod.day_number}`}
+                  {moduleLabel(mod.day_number)}
                 </p>
-                <h2 className="text-lg font-bold">{mod.title.replace(/^(Orientation Day|Day \d+) — /, "")}</h2>
+                <h2 className="text-lg font-bold">{cleanModuleTitle(mod.title)}</h2>
                 <ul className="mt-3 divide-y divide-border">
                   {mod.chapters.map((c) => (
                     <li key={c.id} className="flex items-center gap-3 py-2 text-sm">

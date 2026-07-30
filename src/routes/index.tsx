@@ -7,10 +7,12 @@ import { ShieldCheck, GraduationCap, BarChart3, Award, Plane, ChefHat, Wine, Cof
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Skyportco Training — Onboard every DEN team member in 5 days" },
-      { name: "description", content: "The structured 5-day onboarding platform built for Skyportco / First Meridian Services restaurants at Denver International Airport." },
+      { title: "Skyportco Training — DEN employee onboarding" },
+      { name: "description", content: "The structured employee onboarding platform built for Skyportco / First Meridian Services restaurants at Denver International Airport." },
       { property: "og:title", content: "Skyportco Training Platform" },
-      { property: "og:description", content: "5-day structured training for every role at every DEN outlet — brand, menu, food safety, alcohol service, and hospitality." },
+      { property: "og:description", content: "Structured training for every role at every DEN outlet — brand, menu, food safety, alcohol service, and hospitality." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,
@@ -28,7 +30,7 @@ function Index() {
             <Plane className="h-3 w-3" /> Denver International Airport
           </div>
           <h1 className="mt-6 max-w-3xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-            Onboard every new hire in 5 structured days.
+            Onboard every new hire with structured role training.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-white/85 md:text-xl">
             Skyportco's official training platform for First Meridian Services restaurants and fast-food outlets at DEN. Brand, menu, food safety, alcohol service, and hospitality — built for every role.
@@ -48,8 +50,8 @@ function Index() {
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-8 md:grid-cols-3">
           {[
-            { icon: GraduationCap, title: "5-day structured path", body: "Orientation + Day 1–5. Every day delivers 6–8 hours of training tailored to the role you were hired for." },
-            { icon: ShieldCheck, title: "Food & alcohol safety", body: "ServSafe-style food handling and TIPS-style alcohol service training with quizzes that must be passed." },
+            { icon: GraduationCap, title: "Module-based path", body: "Orientation + role modules. Every section delivers practical training tailored to the role you were hired for." },
+            { icon: ShieldCheck, title: "Food & alcohol safety", body: "Food Safety Fundamentals and Responsible Alcohol Service training with quizzes that must be passed." },
             { icon: BarChart3, title: "Manager visibility", body: "Live progress, quiz scores, and weak-area flags so GMs know exactly where each new hire needs help." },
             { icon: Award, title: "Printable certificate", body: "Pass the final exam and your certificate of completion is generated, ready to print and post." },
             { icon: ChefHat, title: "Role-specific content", body: "Server, bartender, line cook, host, runner, dishwasher, prep cook, supervisor, new manager." },
@@ -92,7 +94,7 @@ function Index() {
       {/* CTA */}
       <section className="mx-auto max-w-5xl px-6 py-24 text-center">
         <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Have an invite code from your manager?</h2>
-        <p className="mt-4 text-lg text-muted-foreground">Sign up in under a minute and start your Orientation Day.</p>
+        <p className="mt-4 text-lg text-muted-foreground">Sign up in under a minute and start your Orientation Module.</p>
         <Button asChild size="lg" className="mt-8">
           <Link to="/auth" search={{ mode: "signup" }}>Enter invite code</Link>
         </Button>

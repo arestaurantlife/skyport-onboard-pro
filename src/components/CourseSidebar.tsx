@@ -13,6 +13,14 @@ type ModuleNode = {
   quizzes: Quiz[];
 };
 
+function moduleLabel(moduleNumber: number) {
+  return moduleNumber === 0 ? "Orientation" : `Module ${moduleNumber}`;
+}
+
+function cleanModuleTitle(title: string) {
+  return title.replace(/^(Orientation (Day|Module)|Day \d+|Module \d+) — /, "");
+}
+
 export function CourseSidebar({
   courseId,
   modules,
@@ -36,7 +44,7 @@ export function CourseSidebar({
         {modules.map((mod) => (
           <div key={mod.id} className="mb-4">
             <div className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              {mod.day_number === 0 ? "Orientation" : `Day ${mod.day_number}`} · {mod.title.replace(/^(Orientation Day|Day \d+) — /, "")}
+              {moduleLabel(mod.day_number)} · {cleanModuleTitle(mod.title)}
             </div>
             <ul className="space-y-0.5">
               {mod.chapters.map((ch) => {

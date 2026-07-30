@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Clock, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
+function moduleLabel(moduleNumber?: number) {
+  return moduleNumber === 0 ? "Orientation" : `Module ${moduleNumber ?? ""}`.trim();
+}
+
 export const Route = createFileRoute("/_authenticated/learn/$chapterId")({
   head: () => ({
     meta: [
@@ -109,7 +113,7 @@ function ChapterPage() {
         <main className="flex-1">
           <div className="mx-auto max-w-3xl px-6 py-10">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-              {chapter.modules?.day_number === 0 ? "Orientation" : `Day ${chapter.modules?.day_number}`}
+              {moduleLabel(chapter.modules?.day_number)}
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight">{chapter.title}</h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">

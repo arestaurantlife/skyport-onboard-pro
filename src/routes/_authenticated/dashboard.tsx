@@ -122,7 +122,7 @@ function Dashboard() {
         <div className="mt-8 rounded-xl border border-border bg-card p-8 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <Badge variant="secondary" className="mb-2">5-day onboarding</Badge>
+              <Badge variant="secondary" className="mb-2">Module-based onboarding</Badge>
               <h2 className="text-2xl font-bold">{course.title}</h2>
               <p className="mt-1 max-w-2xl text-muted-foreground">{course.description}</p>
               {course.outlets?.manager_name && (
@@ -150,7 +150,7 @@ function Dashboard() {
         </div>
       ) : (
         <div className="mt-8 rounded-xl border border-border bg-card p-6">
-          <p className="text-muted-foreground">No course exists yet for your outlet + role combination. Sample course is built only for <strong>Server @ Mesa Verde Cantina</strong>.</p>
+          <p className="text-muted-foreground">No course exists yet for your outlet + role combination. Ask an administrator to review the training catalog for your assignment.</p>
         </div>
       )}
     </Shell>
