@@ -213,6 +213,210 @@ export type Database = {
           },
         ]
       }
+      content_block_translations: {
+        Row: {
+          body_markdown: string
+          content_block_id: string
+          created_at: string
+          id: string
+          locale: string
+          org_id: string
+          reviewed_by: string | null
+          status: string
+          title: string
+          translated_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          body_markdown?: string
+          content_block_id: string
+          created_at?: string
+          id?: string
+          locale: string
+          org_id: string
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body_markdown?: string
+          content_block_id?: string
+          created_at?: string
+          id?: string
+          locale?: string
+          org_id?: string
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_block_translations_content_block_id_fkey"
+            columns: ["content_block_id"]
+            isOneToOne: false
+            referencedRelation: "content_blocks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_block_translations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_blocks: {
+        Row: {
+          block_type: string
+          core_block_id: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          module_id: string
+          org_id: string
+          payload: Json
+          sort_order: number
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          block_type: string
+          core_block_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          module_id: string
+          org_id: string
+          payload?: Json
+          sort_order?: number
+          source: string
+          updated_at?: string
+        }
+        Update: {
+          block_type?: string
+          core_block_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          module_id?: string
+          org_id?: string
+          payload?: Json
+          sort_order?: number
+          source?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_blocks_core_block_id_fkey"
+            columns: ["core_block_id"]
+            isOneToOne: false
+            referencedRelation: "core_library_blocks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_blocks_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_blocks_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      core_library_block_translations: {
+        Row: {
+          body_markdown: string
+          core_library_block_id: string
+          created_at: string
+          id: string
+          locale: string
+          reviewed_by: string | null
+          status: string
+          title: string
+          translated_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          body_markdown?: string
+          core_library_block_id: string
+          created_at?: string
+          id?: string
+          locale: string
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body_markdown?: string
+          core_library_block_id?: string
+          created_at?: string
+          id?: string
+          locale?: string
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "core_library_block_translations_core_library_block_id_fkey"
+            columns: ["core_library_block_id"]
+            isOneToOne: false
+            referencedRelation: "core_library_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      core_library_blocks: {
+        Row: {
+          block_type: string
+          created_at: string
+          id: string
+          is_active: boolean
+          key: string
+          payload: Json
+          sort_order: number
+          topic: string | null
+          updated_at: string
+        }
+        Insert: {
+          block_type: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          key: string
+          payload?: Json
+          sort_order?: number
+          topic?: string | null
+          updated_at?: string
+        }
+        Update: {
+          block_type?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          key?: string
+          payload?: Json
+          sort_order?: number
+          topic?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           created_at: string
@@ -251,6 +455,187 @@ export type Database = {
             columns: ["outlet_id"]
             isOneToOne: false
             referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curricula: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          job_role_key: string | null
+          key: string
+          org_id: string
+          outlet_id: string | null
+          pass_threshold: number
+          status: string
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          job_role_key?: string | null
+          key: string
+          org_id: string
+          outlet_id?: string | null
+          pass_threshold?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          job_role_key?: string | null
+          key?: string
+          org_id?: string
+          outlet_id?: string | null
+          pass_threshold?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curricula_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curricula_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curricula_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_module_translations: {
+        Row: {
+          created_at: string
+          curriculum_module_id: string
+          description: string
+          id: string
+          locale: string
+          org_id: string
+          reviewed_by: string | null
+          status: string
+          title: string
+          translated_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          curriculum_module_id: string
+          description?: string
+          id?: string
+          locale: string
+          org_id: string
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          curriculum_module_id?: string
+          description?: string
+          id?: string
+          locale?: string
+          org_id?: string
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_module_translations_curriculum_module_id_fkey"
+            columns: ["curriculum_module_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curriculum_module_translations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_modules: {
+        Row: {
+          created_at: string
+          curriculum_id: string
+          estimated_minutes: number
+          id: string
+          is_required: boolean
+          key: string
+          module_index: number
+          org_id: string
+          pass_threshold: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          curriculum_id: string
+          estimated_minutes?: number
+          id?: string
+          is_required?: boolean
+          key: string
+          module_index: number
+          org_id: string
+          pass_threshold?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          curriculum_id?: string
+          estimated_minutes?: number
+          id?: string
+          is_required?: boolean
+          key?: string
+          module_index?: number
+          org_id?: string
+          pass_threshold?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_modules_curriculum_id_fkey"
+            columns: ["curriculum_id"]
+            isOneToOne: false
+            referencedRelation: "curricula"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curriculum_modules_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -392,6 +777,53 @@ export type Database = {
             columns: ["outlet_id"]
             isOneToOne: false
             referencedRelation: "outlets_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_role_translations: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          job_role_id: string
+          label: string
+          locale: string
+          reviewed_by: string | null
+          status: string
+          translated_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          job_role_id: string
+          label?: string
+          locale: string
+          reviewed_by?: string | null
+          status?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          job_role_id?: string
+          label?: string
+          locale?: string
+          reviewed_by?: string | null
+          status?: string
+          translated_by?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_role_translations_job_role_id_fkey"
+            columns: ["job_role_id"]
+            isOneToOne: false
+            referencedRelation: "job_roles"
             referencedColumns: ["id"]
           },
         ]
