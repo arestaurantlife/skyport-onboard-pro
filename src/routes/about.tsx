@@ -8,6 +8,8 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: "Skyportco operates restaurants and fast-food outlets at Denver International Airport under the First Meridian Services name." },
       { property: "og:title", content: "About Skyportco" },
       { property: "og:description", content: "Restaurants and fast-food outlets at Denver International Airport." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: About,
@@ -32,7 +34,7 @@ function About() {
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">Our mission</h2>
           <p className="mt-3 text-muted-foreground">
-            Deliver memorable hospitality to every traveler. We invest in our people first — that's why every new hire gets the same structured, role-specific 5-day onboarding.
+            Deliver memorable hospitality to every traveler. We invest in our people first — that's why every new hire gets structured, role-specific module-based onboarding.
           </p>
         </section>
         <section className="mt-12">
@@ -49,12 +51,12 @@ function About() {
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">How the training works</h2>
           <ol className="mt-4 space-y-3 text-muted-foreground">
-            <li><strong className="text-foreground">Orientation Day</strong> — Brand, leadership, HR, badge, 7Shifts setup, meet your GM.</li>
-            <li><strong className="text-foreground">Day 1</strong> — Floor basics, menu intro, soft drinks, opening/closing procedures.</li>
-            <li><strong className="text-foreground">Day 2</strong> — POS, service flow, ServSafe-style food safety + quiz.</li>
-            <li><strong className="text-foreground">Day 3</strong> — Alcohol safety (TIPS) + quiz.</li>
-            <li><strong className="text-foreground">Day 4</strong> — Execute under supervision, service vs. hospitality.</li>
-            <li><strong className="text-foreground">Day 5</strong> — Independent service, manager-as-guest, final exam, certificate.</li>
+            <li><strong className="text-foreground">Orientation Module</strong> — Brand, leadership, HR, badge, 7Shifts setup, meet your GM.</li>
+            <li><strong className="text-foreground">Module 1</strong> — Role basics, menu intro, shift setup, opening/closing procedures.</li>
+            <li><strong className="text-foreground">Module 2</strong> — POS, service flow, Food Safety Fundamentals + quiz.</li>
+            <li><strong className="text-foreground">Module 3</strong> — Responsible Alcohol Service + quiz.</li>
+            <li><strong className="text-foreground">Module 4</strong> — Execute under supervision, service vs. hospitality.</li>
+            <li><strong className="text-foreground">Module 5</strong> — Independent role execution, manager check-off, final exam, certificate.</li>
           </ol>
         </section>
       </div>
