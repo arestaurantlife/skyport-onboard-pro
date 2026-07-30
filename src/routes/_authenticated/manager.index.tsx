@@ -47,7 +47,7 @@ function ManagerHome() {
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("id, full_name, email, job_role, outlet_id, hired_at, outlets(name)")
+        .select("id, full_name, email, job_role, outlet_id, hired_at, outlets!profiles_outlet_id_fkey(name)")
         .order("hired_at", { ascending: false });
       return data ?? [];
     },
