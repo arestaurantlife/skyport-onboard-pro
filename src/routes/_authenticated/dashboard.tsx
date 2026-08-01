@@ -29,13 +29,17 @@ function Dashboard() {
     queryKey: ["my-course", me?.profile?.job_role, me?.profile?.outlet_id],
     enabled: !!me?.profile?.job_role && !!me?.profile?.outlet_id,
     queryFn: async () => {
+      const outletId = me!.profile!.outlet_id!;
+      // Match courses for this outlet OR org-wide courses (outlet_id IS NULL),
+      // and tolerate multiple matches by preferring the outlet-specific, newest one.
       const { data } = await supabase
         .from("courses")
-        .select("id, title, description, outlet_id, job_role, outlets(name, manager_name)")
-        .eq("outlet_id", me!.profile!.outlet_id!)
+        .select("id, title, description, outlet_id, job_role, created_at, outlets(name, manager_name)")
         .eq("job_role", me!.profile!.job_role!)
-        .maybeSingle();
-      return data;
+        .or(`outlet_id.eq.${outletId},outlet_id.is.null`)
+        .order("created_at", { ascending: false });
+      const list = data ?? [];
+      return list.find((c) => c.outlet_id === outletId) ?? list[0] ?? null;
     },
   });
 
