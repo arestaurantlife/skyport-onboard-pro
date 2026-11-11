@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Copy, Plus, Users, AlertTriangle, Mail, Send } from "lucide-react";
 import { getCurrentProfile, JOB_ROLE_LABELS, newInviteCode, type JobRole } from "@/lib/training-helpers";
 import { toast } from "sonner";
-import { sendTransactionalEmail } from "@/lib/email/send";
+import { sendInviteEmail } from "@/lib/email/invite.functions";
 
 export const Route = createFileRoute("/_authenticated/manager/")({
   head: () => ({
@@ -158,23 +158,8 @@ function ManagerHome() {
     expiresAt: string;
     recipient: string;
   }) => {
-    const signupUrl = `${window.location.origin}/auth?mode=signup&code=${encodeURIComponent(args.code)}`;
-    const expires = new Date(args.expiresAt).toLocaleDateString(undefined, {
-      month: "short", day: "numeric", year: "numeric",
-    });
-    await sendTransactionalEmail({
-      templateName: "employee-invite",
-      recipientEmail: args.recipient,
-      idempotencyKey: `invite-${args.id}`,
-      templateData: {
-        outletName: args.outletName,
-        jobRole: JOB_ROLE_LABELS[args.jobRole],
-        inviteCode: args.code,
-        signupUrl,
-        expiresAt: expires,
-        invitedByName: me.profile?.full_name || undefined,
-      },
-    });
+    const res = await sendInviteEmail({ data: { inviteId: args.id, origin: window.location.origin } });
+    if (!res.sent) throw new Error("this address has opted out of emails");
   };
 
   const resendInvite = async (inv: any) => {
