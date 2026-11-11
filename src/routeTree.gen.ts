@@ -9,45 +9,39 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PasswordResetStatusRouteImport } from './routes/password-reset-status'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
-import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PasswordResetStatusRouteImport } from './routes/password-reset-status'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedManagerIndexRouteImport } from './routes/_authenticated/manager.index'
-import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
-import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
-import { Route as AuthenticatedManagerAuditRouteImport } from './routes/_authenticated/manager.audit'
-import { Route as AuthenticatedManagerAdminRouteImport } from './routes/_authenticated/manager.admin'
-import { Route as AuthenticatedLearnChapterIdRouteImport } from './routes/_authenticated/learn.$chapterId'
-import { Route as AuthenticatedCoursesCourseIdRouteImport } from './routes/_authenticated/courses.$courseId'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as EmailUnsubscribeRouteImport } from './routes/email/unsubscribe'
 import { Route as AuthenticatedCertificateCourseIdRouteImport } from './routes/_authenticated/certificate.$courseId'
+import { Route as AuthenticatedCoursesCourseIdRouteImport } from './routes/_authenticated/courses.$courseId'
+import { Route as AuthenticatedLearnChapterIdRouteImport } from './routes/_authenticated/learn.$chapterId'
+import { Route as AuthenticatedManagerIndexRouteImport } from './routes/_authenticated/manager.index'
+import { Route as AuthenticatedManagerAdminRouteImport } from './routes/_authenticated/manager.admin'
+import { Route as AuthenticatedManagerAuditRouteImport } from './routes/_authenticated/manager.audit'
+import { Route as AuthenticatedQuizQuizIdRouteImport } from './routes/_authenticated/quiz.$quizId'
+import { Route as LovableEmailSuppressionRouteImport } from './routes/lovable/email/suppression'
 import { Route as AuthenticatedManagerCoursesIndexRouteImport } from './routes/_authenticated/manager.courses.index'
-import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
-import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
-import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
-import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
-import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
-import { Route as AuthenticatedManagerEmployeesIdRouteImport } from './routes/_authenticated/manager.employees.$id'
 import { Route as AuthenticatedManagerCoursesCourseIdRouteImport } from './routes/_authenticated/manager.courses.$courseId'
+import { Route as AuthenticatedManagerEmployeesIdRouteImport } from './routes/_authenticated/manager.employees.$id'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lovable/email/transactional/send'
 
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PasswordResetStatusRoute = PasswordResetStatusRouteImport.update({
-  id: '/password-reset-status',
-  path: '/password-reset-status',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -55,62 +49,40 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PasswordResetStatusRoute = PasswordResetStatusRouteImport.update({
+  id: '/password-reset-status',
+  path: '/password-reset-status',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
-  id: '/email/unsubscribe',
-  path: '/email/unsubscribe',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/callback',
-  path: '/callback',
-  getParentRoute: () => AuthRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedManagerIndexRoute =
-  AuthenticatedManagerIndexRouteImport.update({
-    id: '/manager/',
-    path: '/manager/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
-  id: '/lovable/email/suppression',
-  path: '/lovable/email/suppression',
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
+const EmailUnsubscribeRoute = EmailUnsubscribeRouteImport.update({
+  id: '/email/unsubscribe',
+  path: '/email/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedQuizQuizIdRoute = AuthenticatedQuizQuizIdRouteImport.update({
-  id: '/quiz/$quizId',
-  path: '/quiz/$quizId',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedManagerAuditRoute =
-  AuthenticatedManagerAuditRouteImport.update({
-    id: '/manager/audit',
-    path: '/manager/audit',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedManagerAdminRoute =
-  AuthenticatedManagerAdminRouteImport.update({
-    id: '/manager/admin',
-    path: '/manager/admin',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedLearnChapterIdRoute =
-  AuthenticatedLearnChapterIdRouteImport.update({
-    id: '/learn/$chapterId',
-    path: '/learn/$chapterId',
+const AuthenticatedCertificateCourseIdRoute =
+  AuthenticatedCertificateCourseIdRouteImport.update({
+    id: '/certificate/$courseId',
+    path: '/certificate/$courseId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCoursesCourseIdRoute =
@@ -119,22 +91,72 @@ const AuthenticatedCoursesCourseIdRoute =
     path: '/courses/$courseId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedCertificateCourseIdRoute =
-  AuthenticatedCertificateCourseIdRouteImport.update({
-    id: '/certificate/$courseId',
-    path: '/certificate/$courseId',
+const AuthenticatedLearnChapterIdRoute =
+  AuthenticatedLearnChapterIdRouteImport.update({
+    id: '/learn/$chapterId',
+    path: '/learn/$chapterId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedManagerIndexRoute =
+  AuthenticatedManagerIndexRouteImport.update({
+    id: '/manager/',
+    path: '/manager/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedManagerAdminRoute =
+  AuthenticatedManagerAdminRouteImport.update({
+    id: '/manager/admin',
+    path: '/manager/admin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedManagerAuditRoute =
+  AuthenticatedManagerAuditRouteImport.update({
+    id: '/manager/audit',
+    path: '/manager/audit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedQuizQuizIdRoute = AuthenticatedQuizQuizIdRouteImport.update({
+  id: '/quiz/$quizId',
+  path: '/quiz/$quizId',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const LovableEmailSuppressionRoute = LovableEmailSuppressionRouteImport.update({
+  id: '/lovable/email/suppression',
+  path: '/lovable/email/suppression',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedManagerCoursesIndexRoute =
   AuthenticatedManagerCoursesIndexRouteImport.update({
     id: '/manager/courses/',
     path: '/manager/courses/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const LovableEmailTransactionalSendRoute =
-  LovableEmailTransactionalSendRouteImport.update({
-    id: '/lovable/email/transactional/send',
-    path: '/lovable/email/transactional/send',
+const AuthenticatedManagerCoursesCourseIdRoute =
+  AuthenticatedManagerCoursesCourseIdRouteImport.update({
+    id: '/manager/courses/$courseId',
+    path: '/manager/courses/$courseId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedManagerEmployeesIdRoute =
+  AuthenticatedManagerEmployeesIdRouteImport.update({
+    id: '/manager/employees/$id',
+    path: '/manager/employees/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
     getParentRoute: () => rootRouteImport,
   } as any)
 const LovableEmailTransactionalPreviewRoute =
@@ -143,33 +165,11 @@ const LovableEmailTransactionalPreviewRoute =
     path: '/lovable/email/transactional/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
-const LovableEmailQueueProcessRoute =
-  LovableEmailQueueProcessRouteImport.update({
-    id: '/lovable/email/queue/process',
-    path: '/lovable/email/queue/process',
+const LovableEmailTransactionalSendRoute =
+  LovableEmailTransactionalSendRouteImport.update({
+    id: '/lovable/email/transactional/send',
+    path: '/lovable/email/transactional/send',
     getParentRoute: () => rootRouteImport,
-  } as any)
-const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
-  id: '/lovable/email/auth/webhook',
-  path: '/lovable/email/auth/webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
-  id: '/lovable/email/auth/preview',
-  path: '/lovable/email/auth/preview',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedManagerEmployeesIdRoute =
-  AuthenticatedManagerEmployeesIdRouteImport.update({
-    id: '/manager/employees/$id',
-    path: '/manager/employees/$id',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedManagerCoursesCourseIdRoute =
-  AuthenticatedManagerCoursesCourseIdRouteImport.update({
-    id: '/manager/courses/$courseId',
-    path: '/manager/courses/$courseId',
-    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -352,32 +352,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/password-reset-status': {
-      id: '/password-reset-status'
-      path: '/password-reset-status'
-      fullPath: '/password-reset-status'
-      preLoaderRoute: typeof PasswordResetStatusRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -387,26 +366,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/email/unsubscribe': {
-      id: '/email/unsubscribe'
-      path: '/email/unsubscribe'
-      fullPath: '/email/unsubscribe'
-      preLoaderRoute: typeof EmailUnsubscribeRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof AuthRoute
+    '/password-reset-status': {
+      id: '/password-reset-status'
+      path: '/password-reset-status'
+      fullPath: '/password-reset-status'
+      preLoaderRoute: typeof PasswordResetStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -415,46 +401,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/manager/': {
-      id: '/_authenticated/manager/'
-      path: '/manager'
-      fullPath: '/manager/'
-      preLoaderRoute: typeof AuthenticatedManagerIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/lovable/email/suppression': {
-      id: '/lovable/email/suppression'
-      path: '/lovable/email/suppression'
-      fullPath: '/lovable/email/suppression'
-      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+    '/email/unsubscribe': {
+      id: '/email/unsubscribe'
+      path: '/email/unsubscribe'
+      fullPath: '/email/unsubscribe'
+      preLoaderRoute: typeof EmailUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/quiz/$quizId': {
-      id: '/_authenticated/quiz/$quizId'
-      path: '/quiz/$quizId'
-      fullPath: '/quiz/$quizId'
-      preLoaderRoute: typeof AuthenticatedQuizQuizIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/manager/audit': {
-      id: '/_authenticated/manager/audit'
-      path: '/manager/audit'
-      fullPath: '/manager/audit'
-      preLoaderRoute: typeof AuthenticatedManagerAuditRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/manager/admin': {
-      id: '/_authenticated/manager/admin'
-      path: '/manager/admin'
-      fullPath: '/manager/admin'
-      preLoaderRoute: typeof AuthenticatedManagerAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/learn/$chapterId': {
-      id: '/_authenticated/learn/$chapterId'
-      path: '/learn/$chapterId'
-      fullPath: '/learn/$chapterId'
-      preLoaderRoute: typeof AuthenticatedLearnChapterIdRouteImport
+    '/_authenticated/certificate/$courseId': {
+      id: '/_authenticated/certificate/$courseId'
+      path: '/certificate/$courseId'
+      fullPath: '/certificate/$courseId'
+      preLoaderRoute: typeof AuthenticatedCertificateCourseIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/courses/$courseId': {
@@ -464,12 +429,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoursesCourseIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/certificate/$courseId': {
-      id: '/_authenticated/certificate/$courseId'
-      path: '/certificate/$courseId'
-      fullPath: '/certificate/$courseId'
-      preLoaderRoute: typeof AuthenticatedCertificateCourseIdRouteImport
+    '/_authenticated/learn/$chapterId': {
+      id: '/_authenticated/learn/$chapterId'
+      path: '/learn/$chapterId'
+      fullPath: '/learn/$chapterId'
+      preLoaderRoute: typeof AuthenticatedLearnChapterIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manager/': {
+      id: '/_authenticated/manager/'
+      path: '/manager'
+      fullPath: '/manager/'
+      preLoaderRoute: typeof AuthenticatedManagerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manager/admin': {
+      id: '/_authenticated/manager/admin'
+      path: '/manager/admin'
+      fullPath: '/manager/admin'
+      preLoaderRoute: typeof AuthenticatedManagerAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/manager/audit': {
+      id: '/_authenticated/manager/audit'
+      path: '/manager/audit'
+      fullPath: '/manager/audit'
+      preLoaderRoute: typeof AuthenticatedManagerAuditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/quiz/$quizId': {
+      id: '/_authenticated/quiz/$quizId'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof AuthenticatedQuizQuizIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/lovable/email/suppression': {
+      id: '/lovable/email/suppression'
+      path: '/lovable/email/suppression'
+      fullPath: '/lovable/email/suppression'
+      preLoaderRoute: typeof LovableEmailSuppressionRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/manager/courses/': {
       id: '/_authenticated/manager/courses/'
@@ -478,25 +478,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManagerCoursesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/lovable/email/transactional/send': {
-      id: '/lovable/email/transactional/send'
-      path: '/lovable/email/transactional/send'
-      fullPath: '/lovable/email/transactional/send'
-      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/manager/courses/$courseId': {
+      id: '/_authenticated/manager/courses/$courseId'
+      path: '/manager/courses/$courseId'
+      fullPath: '/manager/courses/$courseId'
+      preLoaderRoute: typeof AuthenticatedManagerCoursesCourseIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/lovable/email/transactional/preview': {
-      id: '/lovable/email/transactional/preview'
-      path: '/lovable/email/transactional/preview'
-      fullPath: '/lovable/email/transactional/preview'
-      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/manager/employees/$id': {
+      id: '/_authenticated/manager/employees/$id'
+      path: '/manager/employees/$id'
+      fullPath: '/manager/employees/$id'
+      preLoaderRoute: typeof AuthenticatedManagerEmployeesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/lovable/email/queue/process': {
-      id: '/lovable/email/queue/process'
-      path: '/lovable/email/queue/process'
-      fullPath: '/lovable/email/queue/process'
-      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/auth/webhook': {
@@ -506,26 +506,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/auth/preview': {
-      id: '/lovable/email/auth/preview'
-      path: '/lovable/email/auth/preview'
-      fullPath: '/lovable/email/auth/preview'
-      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/manager/employees/$id': {
-      id: '/_authenticated/manager/employees/$id'
-      path: '/manager/employees/$id'
-      fullPath: '/manager/employees/$id'
-      preLoaderRoute: typeof AuthenticatedManagerEmployeesIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/manager/courses/$courseId': {
-      id: '/_authenticated/manager/courses/$courseId'
-      path: '/manager/courses/$courseId'
-      fullPath: '/manager/courses/$courseId'
-      preLoaderRoute: typeof AuthenticatedManagerCoursesCourseIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/lovable/email/transactional/send': {
+      id: '/lovable/email/transactional/send'
+      path: '/lovable/email/transactional/send'
+      fullPath: '/lovable/email/transactional/send'
+      preLoaderRoute: typeof LovableEmailTransactionalSendRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
